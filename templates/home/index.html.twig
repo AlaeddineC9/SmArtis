@@ -57,20 +57,32 @@
     {{ form_end(form) }}
 
     <!-- SEARCH RESULTS -->
-    <div class="container mt-4" id="searchResults">
-        {% if products is not empty %}
-            <h2 class="text-center">Résultats de recherche :</h2>
-            <ul>
-                {% for product in products %}
-                    <hr>
-                    <a href="{{ path('app_product', {slug: product.slug}) }}">{{ product.name }}</a>
-                    <hr>
-                {% endfor %}
-            </ul>
-        {% elseif searchPerformed %}
-            <p class="text-center">Aucun produit trouvé.</p>
-        {% endif %}
-    </div>
+   <div class="container mt-4" id="searchResults">
+    {% if products is not empty %}
+        <h2 class="text-center">Résultats de recherche :</h2>
+        <ul>
+            {% for product in products %}
+                <hr>
+               <a href="{% if product.sousCategory %}
+    {{ path('app_product', { 
+        'category_slug': product.category.slug, 
+        'souscategory_slug': product.sousCategory.slug, 
+        'slug': product.slug 
+    }) }}
+{% else %}
+    {{ path('app_product', { 
+        'category_slug': product.category.slug, 
+        'souscategory_slug': 'Not Found', 
+        'slug': product.slug 
+    }) }}
+{% endif %}">{{ product.name }}</a>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% elseif searchPerformed %}
+        <p class="text-center">Aucun produit trouvé.</p>
+    {% endif %}
+</div>
 
     <!-- HOMEPAGE PRODUCTS -->
     <div class="container text-center mt-4 background-container">
@@ -81,7 +93,8 @@
     {% for product in productsInHomepage %}
         <div class="col-md-7">
             <h1 class="featurette-heading fw-normal lh-2">{{ product.name }}</h1>
-            <h2 class="lead">{{ product.description }}</h2>
+            <h2 class="lead">{{ product.description|striptags }}</h2>
+
             <p>
                 <a class="btn btn-secondary" href="{% if product.sousCategory %}
                     {{ path('app_product', { 
