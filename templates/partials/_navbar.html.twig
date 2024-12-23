@@ -9,17 +9,17 @@
             <ul class="navbar-nav me-auto mb-2 mb-md-0 navbar-top-nav">
                 <li class="nav-item nav-top-item">
                     <a class="nav-link nav-top-link {{ app.request.get('_route') == 'app_home' ? 'active' : '' }}"
-                       href="{{ path('app_home') }}">Accueil</a>
+                    href="{{ path('app_home') }}">Accueil</a>
                 </li>
                 <li class="nav-item nav-top-item">
                     <a class="nav-link nav-top-link {{ app.request.get('_route') == 'app_about_us' ? 'active' : '' }}"
-                       href="#">À propos de nous</a>
+                    href="#">À propos de nous</a>
                 </li>
                 <li class="nav-item nav-top-item">
                     <a class="nav-link nav-top-link {{ app.request.get('_route') == 'contact' ? 'active' : '' }}"
-                       href="{{ path('contact') }}">Contact</a>
+                    href="{{ path('contact') }}">Contact</a>
                 </li>
-               <div class="speed-menu navbar-bottom-speed-menu">
+            <div class="speed-menu navbar-bottom-speed-menu">
                 {% if app.user %}
                     <a href="{{ path('app_account') }}" class="nav-link navtop-link">
                         <i data-feather="user"></i>
