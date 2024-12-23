@@ -1,22 +1,71 @@
-{# templates/partials/_navbar.html.twig #}
-<nav class="navbar navbar-expand-md navbar-dark fixed-top ml-auto">
+<!-- Première Navbar (Noire) -->
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top navbar-top">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ path('app_home') }}">
-            <img src="{{ asset('SmArtis.gif') }}" alt="Logo SMARTIS" class="logo-animation">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" 
-                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Basculer la navigation">
+        <button class="navbar-toggler navbar-top-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTopCollapse" 
+                aria-controls="navbarTopCollapse" aria-expanded="false" aria-label="Basculer la navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                <li class="nav-item">
-                    <a class="nav-link {{ app.request.get('_route') == 'app_home' ? 'active' : '' }}" 
+        <div class="collapse navbar-collapse navbar-top-collapse" id="navbarTopCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0 navbar-top-nav">
+                <li class="nav-item nav-top-item">
+                    <a class="nav-link nav-top-link {{ app.request.get('_route') == 'app_home' ? 'active' : '' }}"
                        href="{{ path('app_home') }}">Accueil</a>
                 </li>
+                <li class="nav-item nav-top-item">
+                    <a class="nav-link nav-top-link {{ app.request.get('_route') == 'app_about_us' ? 'active' : '' }}"
+                       href="#">À propos de nous</a>
+                </li>
+                <li class="nav-item nav-top-item">
+                    <a class="nav-link nav-top-link {{ app.request.get('_route') == 'contact' ? 'active' : '' }}"
+                       href="{{ path('contact') }}">Contact</a>
+                </li>
+               <div class="speed-menu navbar-bottom-speed-menu">
+                {% if app.user %}
+                    <a href="{{ path('app_account') }}" class="nav-link navtop-link">
+                        <i data-feather="user"></i>
+                        {{ app.user.firstname }}
+                    </a>
+                    <a href="{{ path('app_account_wishlist') }}" class="heart-icons navbar-bottom-heart">
+                        <i data-feather="heart"></i>
+                        {% if app.user.wishlists|length > 0 %}
+                            <span class="wishlist-count">{{ app.user.wishlists|length }}</span>
+                        {% endif %}
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="navbar-bottom-login-link">
+                        <i data-feather="user"></i>
+                    </a>
+                {% endif %}
+                <a href="{{ path('app_cart') }}" class="nav-link navtop-link">
+                    <i data-feather="shopping-cart"></i>
+                    <span class="badge text-bg-light">{{ fullCartQuantity }}</span>
+                </a>
+            </div>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Deuxième Navbar (Catégories) -->
+<nav class="navbar navbar-expand-md navbar-dark fixed-top navbar-bottom" style="top: 56px;">
+    <div class="container-fluid">
+        <a class="navbar-brand navbar-bottom-brand" href="{{ path('app_home') }}">
+            <img src="{{ asset('SmArtis.gif') }}" alt="Logo SMARTIS" class="logo-animation" >
+        </a>
+        <button class="navbar-toggler navbar-bottom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarBottomCollapse" 
+                aria-controls="navbarBottomCollapse" aria-expanded="false" aria-label="Basculer la navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse navbar-bottom-collapse" id="navbarBottomCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0 navbar-bottom-nav">
+                <!-- Vous pouvez retirer Accueil ici si vous ne voulez pas le dupliquer -->
+                {# <li class="nav-item nav-bottom-item">
+                    <a class="nav-link nav-bottom-link {{ app.request.get('_route') == 'app_home' ? 'active' : '' }}" 
+                       href="{{ path('app_home') }}">Accueil</a>
+                </li> #}
                 {% for category in categories %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {{ app.request.get('_route') == 'app_category' and 
+                    <li class="nav-item dropdown nav-bottom-item">
+                        <a class="nav-link dropdown-toggle nav-bottom-link {{ app.request.get('_route') == 'app_category' and 
                             app.request.get('_route_params')['slug'] == category.slug ? 'active' : '' }}"
                            href="#" 
                            id="navbarDropdown{{ category.id }}" 
@@ -25,12 +74,12 @@
                            aria-expanded="false">
                             {{ category.name }}
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown{{ category.id }}">
+                        <ul class="dropdown-menu dropdown-bottom-menu" aria-labelledby="navbarDropdown{{ category.id }}">
                             {# Produits sans sous-catégorie #}
                             {% for product in category.products %}
                                 {% if product.sousCategory is null %}
-                                    <li>
-                                        <a class="dropdown-item" href="{{ path('app_product', {
+                                    <li class="nav-bottom-item">
+                                        <a class="dropdown-item dropdown-bottom-item" href="{{ path('app_product', {
                                             category_slug: product.category.slug,
                                             souscategory_slug: 'aucune', 
                                             slug: product.slug
@@ -43,16 +92,16 @@
 
                             {# Sous-catégories #}
                             {% for sousCategory in category.sousCategories %}
-                                <li class="dropdown-submenu dropdown">
-                                    <a class="dropdown-item dropdown-toggle" href="#" aria-expanded="false">
+                                <li class="dropdown-bottom-submenu dropdown nav-bottom-item">
+                                    <a class="dropdown-item dropdown-bottom-item dropdown-toggle nav-bottom-link" href="#" aria-expanded="false">
                                         {{ sousCategory.name }}
                                     </a>
                                     {% if sousCategory.products|length > 0 %}
-                                        <ul class="dropdown-menu">
+                                        <ul class="dropdown-menu dropdown-bottom-menu">
                                             {% for product in sousCategory.products %}
                                                 {% if product.category and product.sousCategory %}
-                                                    <li>
-                                                        <a class="dropdown-item" href="{{ path('app_product', {
+                                                    <li class="nav-bottom-item">
+                                                        <a class="dropdown-item dropdown-bottom-item" href="{{ path('app_product', {
                                                             category_slug: product.category.slug,
                                                             souscategory_slug: product.sousCategory.slug,
                                                             slug: product.slug
@@ -67,55 +116,34 @@
                                 </li>
                             {% endfor %}
                             <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item text-center" href="{{ path('app_category', {slug: category.slug}) }}">
+                            <li class="nav-bottom-item">
+                                <a class="dropdown-item dropdown-bottom-item text-center" href="{{ path('app_category', {slug: category.slug}) }}">
                                     Voir tous les produits
                                 </a>
                             </li>
                         </ul>
                     </li>
                 {% endfor %}
-                <li class="nav-item">
-                    <a class="nav-link {{ app.request.get('_route') == 'contact' ? 'active' : '' }}" 
+                {# <li class="nav-item nav-bottom-item">
+                    <a class="nav-link nav-bottom-link {{ app.request.get('_route') == 'contact' ? 'active' : '' }}" 
                        href="{{ path('contact') }}">Contact</a>
-                </li>
+                </li> #}
             </ul>
-            <div class="speed-menu">
-                {% if app.user %}
-                    <a href="{{ path('app_account') }}">
-                        <i data-feather="user"></i>
-                        {{ app.user.firstname }}
-                    </a>
-                    <a href="{{ path('app_account_wishlist') }}" class="heart-icons">
-                        <i data-feather="heart"></i>
-                        {% if app.user.wishlists|length > 0 %}
-                            <span class="wishlist-count">{{ app.user.wishlists|length }}</span>
-                        {% endif %}
-                    </a>
-                {% else %}
-                    <a href="{{ path('app_login') }}">
-                        <i data-feather="user"></i>
-                    </a>
-                {% endif %}
-                <a href="{{ path('app_cart') }}">
-                    <i data-feather="shopping-cart"></i>
-                    <span class="badge text-bg-light">{{ fullCartQuantity }}</span>
-                </a>
-            </div>
+            
         </div>
     </div>
 </nav>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var dropdownSubmenus = document.querySelectorAll('.dropdown-submenu .dropdown-toggle');
+    var dropdownSubmenus = document.querySelectorAll('.dropdown-bottom-submenu .dropdown-toggle');
 
     dropdownSubmenus.forEach(function (toggle) {
         toggle.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
 
-            document.querySelectorAll('.dropdown-submenu .dropdown-menu.show').forEach(function (openMenu) {
+            document.querySelectorAll('.dropdown-bottom-submenu .dropdown-menu.show').forEach(function (openMenu) {
                 if (openMenu !== toggle.nextElementSibling) {
                     openMenu.classList.remove('show');
                 }
@@ -127,8 +155,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.addEventListener('click', function (e) {
-        if (!e.target.closest('.dropdown-submenu')) {
-            document.querySelectorAll('.dropdown-submenu .dropdown-menu.show').forEach(function (menu) {
+        if (!e.target.closest('.dropdown-bottom-submenu')) {
+            document.querySelectorAll('.dropdown-bottom-submenu .dropdown-menu.show').forEach(function (menu) {
                 menu.classList.remove('show');
             });
         }

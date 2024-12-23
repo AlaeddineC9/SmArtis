@@ -52,9 +52,10 @@ html[data-theme=dark] {
     --docsearch-muted-color: #7f8497;
     background-image: url("../Design.png");
 }
-
+.carousel{
+    margin-top: 76px;
+}
 .background-image {
-    margin:36px;
     background-image: url("../ala.jpeg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -62,8 +63,10 @@ html[data-theme=dark] {
     background-attachment: fixed;
 }
 
-.navbar {
-    background-image: url("../navback.jpg");
+.navbar-bottom {
+    position: relative; /* Permet de positionner le pseudo-élément */
+    z-index: 0;
+    
     width: 100%;
     height: 68px;
     border-radius: 12px;
@@ -71,17 +74,92 @@ html[data-theme=dark] {
     font-weight: 400;
     font-style: normal;
     font-size: 1.5rem;
+    padding-left: 56px;
+    margin-top: 8px;
     
     
 }
+.navbar-top{
+    position: absolute; /* Permet de positionner le pseudo-élément */
+    z-index: 0;
+    background-color: #000000;
+    color: #ffffff;
+    width: 100%;
+    height: 68px;
+    
+    font-family: "Lilita One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.5rem;
+    padding-left: 25%;
+}
+.navbar-top.navbar-expand-md .navbar-nav .nav-link {
+    display: flex;
+    justify-content: flex-end;
+    gap: 24px;
+    padding-right: 36px;
+
+    /* Appliquer un dégradé en fond */
+    background: linear-gradient(90deg, #F2DA5E,#D9961A, #F2D022);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent; /* Le texte est transparent pour laisser apparaître le dégradé */
+}
+
+.navbar-bottom::before {
+    content: "";
+    background-image: url("../ala1.jpg");
+    opacity: 0.6;
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    border-radius: 0 0 16px 16px;
+}
+.speed-menu{
+    display: contents;
+}
+.container {
+    margin-top: 86px;
+    padding-left: 32px;
+}
 .footer {
-    background-image: url("../navback.jpg");
+    position: relative; /* Permet de positionner le pseudo-élément */
+    z-index: 0;
+   
     height: 68px;
     border-radius: 12px;
     font-family: "Lilita One", sans-serif;
    
     font-style: normal;
+    margin-top: 64px;
    
+}
+.footer::before {
+    content: "";
+    background-image: url("../ala1.jpg");
+    opacity: 0.8;
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    border-radius: 16px;
+}
+.info h2 {
+    font-family: "Lilita One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.5rem;
+    color: #262626;
+    text-align: center;
 }
 
 .navbar img {
@@ -138,7 +216,10 @@ html[data-theme=dark] {
     
 }
 
-
+.row {
+    padding-left: 286px;
+    padding-right: 48px;
+}
 .card{
     box-shadow: 2px 2px 7px 1px rgb(115, 115, 115);
 }
@@ -158,6 +239,15 @@ html[data-theme=dark] {
 }
 .carousel-inner{overflow:hidden;position:relative;width:100%;height:906px;}
 .carousel-inner img{width:100%;height:900px;margin-top: -20px; justify-items: center;}
+.carousel-caption{
+    margin-bottom: 124px;
+}
+.contact-section{
+    background-color: #e4e4e4;
+    margin-left: 164px;
+    margin-right: 164px;
+    border-radius: 16px;
+}
 .DocSearch-Button {
     align-items: center;
     background: var(--docsearch-searchbox-background);
