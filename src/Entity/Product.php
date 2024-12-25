@@ -40,7 +40,7 @@ class Product
     #[ORM\JoinColumn(nullable:false)]
     private ?Category $category = null;
 
-    #[ORM\ManyToOne(targetEntity: SousCategory::class, inversedBy: 'products')]
+    #[ORM\ManyToOne(targetEntity: SousCategory::class, inversedBy: 'products', fetch: "EAGER")]
     #[ORM\JoinColumn(nullable:true)]
     private ?SousCategory $sousCategory = null;
 
@@ -292,20 +292,20 @@ class Product
         return $this;
     }
 
-    public function __toString()
-    {
-        return $this->name;
-    }
-
+    
     public function isHomepage(): ?bool
     {
         return $this->isHomepage;
     }
-
+    
     public function setHomepage(bool $isHomepage): static
     {
         $this->isHomepage = $isHomepage;
-
+        
         return $this;
+    }
+    public function __toString()
+    {
+        return $this->name;
     }
 }

@@ -67,7 +67,7 @@ class ProductCrudController extends AbstractCrudController
         $dimensions = TextField::new('dimensions', 'Dimensions');
 
         $category = AssociationField::new('category', 'Catégorie associée')->autocomplete();
-        $sousCategory = AssociationField::new('sousCategory', 'Sous-catégorie associée')->autocomplete();
+        $sousCategory = AssociationField::new('sousCategory', 'Sous-catégorie associée');
 
         // CollectionField pour gérer ProductMedia
         $medias = CollectionField::new('medias', 'Médias (images/vidéos)')
