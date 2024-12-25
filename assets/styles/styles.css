@@ -53,7 +53,8 @@ html[data-theme=dark] {
     background-image: url("../Design.png");
 }
 .carousel{
-    margin-top: 76px;
+    margin-top: 0px;
+    z-index: -2;
 }
 .background-image {
     background-image: url("../ala.jpeg");
@@ -65,7 +66,7 @@ html[data-theme=dark] {
 
 .navbar-bottom {
     position: relative; /* Permet de positionner le pseudo-élément */
-    z-index: 0;
+    z-index: 1000;
     
     width: 100%;
     height: 68px;
@@ -136,7 +137,7 @@ html[data-theme=dark] {
     font-family: "Lilita One", sans-serif;
    
     font-style: normal;
-    margin-top: 64px;
+    margin-top: 94px;
    
 }
 .footer::before {
@@ -168,14 +169,17 @@ html[data-theme=dark] {
 }
 .navbar-expand-md .navbar-nav .nav-link {
     color: #262626;
+    z-index: 1000;
 }
 .navbar-nav .dropdown-menu {
     width: 300px;
+    z-index: 1000;
 }
 
 /* Ajustement de la largeur des sous-menus */
-.dropdown-submenu .dropdown-menu {
+.dropdown-bottom-submenu .dropdown-menu {
     width: 264px;
+    z-index: 1000;
 }
 
 /* Cacher les menus déroulants par défaut */
@@ -185,18 +189,21 @@ html[data-theme=dark] {
     top: 100%;
     left: 0;
     margin-top: 0.125rem;
+    margin-left: -1px;
     z-index: 1000;
 }
 
 /* Positionnement pour les sous-menus */
-.dropdown-submenu {
+.dropdown-bottom-submenu {
     position: relative;
+    z-index: 1000;
 }
 
-.dropdown-submenu .dropdown-menu {
+.dropdown-bottom-submenu .dropdown-menu {
     top: 0;
     left: 100%;
     margin-top: -1px;
+    z-index: 1000;
 }
 
 /* Ajouter une flèche aux sous-catégories */
@@ -209,6 +216,7 @@ html[data-theme=dark] {
 /* Afficher les menus déroulants lorsqu'ils ont la classe 'show' */
 .dropdown-menu.show {
     display: block;
+    z-index: 1000;
 }
 .badge {
     

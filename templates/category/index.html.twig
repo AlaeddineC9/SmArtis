@@ -57,7 +57,7 @@
         <h3>Produits</h3>
         <div class="row g-5">
             {% for product in products %}
-                <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="col-sm-6 col-md-4 col-lg-3 " style="width:28%;">
                     <div class="card h-100">
                         <a href="{{ path('app_product', {
                             category_slug: product.category.slug,
@@ -68,7 +68,7 @@
                                 src="{{ asset('uploads/products/' ~ product.illustration) }}"
                                 class="card-img-top img-fluid"
                                 alt="{{ product.name }}"
-                                style="border-radius: .5rem; object-fit: cover; height: 300px;"
+                                style="border-radius: .5rem; object-fit: cover; height: 256px;"
                             >
                         </a>
                         <div class="card-body text-center">

@@ -19,7 +19,11 @@
 					<tr>
 						<td class="text-center">
 							<div class="p-1">
-								<img src="/uploads/{{product.object.illustration}}" alt="{{product.object.name}}" class="img-fluid" style="width: 50px; height: 50px;">
+								<img src="{{ asset('uploads/products/' ~ product.object.illustration) }}" 
+     alt="{{ product.object.name }}" 
+     class="img-fluid" 
+     style="width: 50px; height: 50px;">
+
 							</div>
 						</td>
 						<td class="text-center">

@@ -97,18 +97,12 @@
             <h1 class="featurette-heading fw-normal lh-2">{{ product.name }}</h1>
             <h2 class="lead">{{ product.description|striptags }}</h2>
             <p>
-                <a class="btn btn-secondary" href="{% if product.sousCategory %}
-                    {{ path('app_product', { 
-                        'category_slug': product.category.slug, 
-                        'souscategory_slug': product.sousCategory.slug, 
-                        'slug': product.slug 
-                    }) }}
-                {% else %}
-                    {{ path('app_product', { 
-                        'category_slug': product.category.slug, 
-                        'slug': product.slug 
-                    }) }}
-                {% endif %}">Découvrir &raquo;</a>
+                <a class="btn btn-secondary"
+   href="{{ path('app_product', {
+     category_slug: product.category.slug,
+     souscategory_slug: product.sousCategory ? product.sousCategory.slug : 'aucune',
+     slug: product.slug
+   }) }}">Découvrir &raquo;</a>
             </p>
         </div>
         <div class="col-md-5 d-flex align-items-center justify-content-center">

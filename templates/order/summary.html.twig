@@ -15,7 +15,11 @@
 					<div class="row mt-2">
 
 						<div class="col-md-2">
-							<hr><img src="/uploads/{{product.object.illustration}}" alt="{{product.object.name}}" class="img-fluid" style="width: 50px; height: 50px;">
+							<hr><img src="{{ asset('uploads/products/' ~ product.object.illustration) }}" 
+     alt="{{ product.object.name }}" 
+     class="img-fluid" 
+     style="width: 50px; height: 50px;">
+
 						</div>
 
 						<div class="col-md-6">
@@ -50,7 +54,7 @@
 				{{choices.carriers.description }}
 			</div>
 			<div class="col-md-4 mt-5">
-				<div class="bg-light p3">
+				<div class="p3">
 					<div class="d-flex justify-content-between">
 						<span class="fw-bold">Total produit</span>
                         <span>{{ fullCartQuantity }}</span>
