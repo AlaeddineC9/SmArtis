@@ -7,8 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[Vich\Uploadable]
 class Product
 {
     #[ORM\Id]
@@ -47,6 +49,28 @@ class Product
     #[ORM\Column(type: 'boolean', options: ["default" => false])]
     private bool $isHomepage = false;
 
+    #[ORM\Column(type:'float', nullable:true)]
+    private ?float $weight = null;
+
+    #[ORM\Column(length:255, nullable:true)]
+    private ?string $dimensions = null;
+
+    #[Vich\UploadableField(mapping: 'product_illustration', fileNameProperty: 'illustration')]
+    private ?File $illustrationFile = null;
+
+    #[ORM\Column(type:'datetime', nullable:true)]
+    private ?\DateTimeInterface $updatedAt = null;
+
+    /**
+     * @var Collection<int, ProductMedia>
+     */
+    #[ORM\OneToMany(
+        mappedBy: 'product',
+        targetEntity: ProductMedia::class,
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
+    private Collection $medias;
     // ... autres méthodes
 
     public function getIsHomepage(): bool
@@ -64,6 +88,7 @@ class Product
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -104,6 +129,21 @@ class Product
         return $this;
     }
 
+    public function setIllustrationFile(?File $file): self
+    {
+        $this->illustrationFile = $file;
+        if ($file) {
+            // Force la mise à jour pour déclencher la re-persistence
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+        return $this;
+    }
+
+    public function getIllustrationFile(): ?File
+    {
+        return $this->illustrationFile;
+    }
+
     public function getIllustration(): ?string
     {
         return $this->illustration;
@@ -112,6 +152,66 @@ class Product
     public function setIllustration(?string $illustration): static
     {
         $this->illustration = $illustration;
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    public function getWeight(): ?float
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(?float $weight): static
+    {
+        $this->weight = $weight;
+        return $this;
+    }
+
+    public function getDimensions(): ?string
+    {
+        return $this->dimensions;
+    }
+
+    public function setDimensions(?string $dimensions): static
+    {
+        $this->dimensions = $dimensions;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductMedia>
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function addMedia(ProductMedia $media): static
+    {
+        if (!$this->medias->contains($media)) {
+            $this->medias->add($media);
+            $media->setProduct($this);
+        }
+        return $this;
+    }
+
+    public function removeMedia(ProductMedia $media): static
+    {
+        if ($this->medias->removeElement($media)) {
+            if ($media->getProduct() === $this) {
+                $media->setProduct(null);
+            }
+        }
         return $this;
     }
 

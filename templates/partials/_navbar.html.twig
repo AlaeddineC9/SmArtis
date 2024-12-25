@@ -9,16 +9,33 @@
             <ul class="navbar-nav me-auto mb-2 mb-md-0 navbar-top-nav">
                 <li class="nav-item nav-top-item">
                     <a class="nav-link nav-top-link {{ app.request.get('_route') == 'app_home' ? 'active' : '' }}"
-                    href="{{ path('app_home') }}">Accueil</a>
+                       href="{{ path('app_home') }}">
+                        Accueil
+                    </a>
                 </li>
                 <li class="nav-item nav-top-item">
                     <a class="nav-link nav-top-link {{ app.request.get('_route') == 'app_about_us' ? 'active' : '' }}"
-                    href="#">À propos de nous</a>
+                       href="#">
+                       À propos de nous
+                    </a>
                 </li>
                 <li class="nav-item nav-top-item">
                     <a class="nav-link nav-top-link {{ app.request.get('_route') == 'contact' ? 'active' : '' }}"
-                    href="{{ path('contact') }}">Contact</a>
+                       href="{{ path('contact') }}">
+                       Contact
+                    </a>
                 </li>
+                {% if not app.user %}
+                    <!-- Bouton Connexion visible uniquement si l’utilisateur n’est pas connecté -->
+                    <li class="nav-item nav-top-item">
+                        <a class="nav-link nav-top-link" href="{{ path('app_login') }}">
+                            Connexion
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <!-- Menu de droite (icônes user, wishlist, panier) -->
             <div class="speed-menu navbar-bottom-speed-menu">
                 {% if app.user %}
                     <a href="{{ path('app_account') }}" class="nav-link navtop-link">
@@ -41,7 +58,6 @@
                     <span class="badge text-bg-light">{{ fullCartQuantity }}</span>
                 </a>
             </div>
-            </ul>
         </div>
     </div>
 </nav>
@@ -58,11 +74,6 @@
         </button>
         <div class="collapse navbar-collapse navbar-bottom-collapse" id="navbarBottomCollapse">
             <ul class="navbar-nav me-auto mb-2 mb-md-0 navbar-bottom-nav">
-                <!-- Vous pouvez retirer Accueil ici si vous ne voulez pas le dupliquer -->
-                {# <li class="nav-item nav-bottom-item">
-                    <a class="nav-link nav-bottom-link {{ app.request.get('_route') == 'app_home' ? 'active' : '' }}" 
-                       href="{{ path('app_home') }}">Accueil</a>
-                </li> #}
                 {% for category in categories %}
                     <li class="nav-item dropdown nav-bottom-item">
                         <a class="nav-link dropdown-toggle nav-bottom-link {{ app.request.get('_route') == 'app_category' and 
@@ -89,7 +100,6 @@
                                     </li>
                                 {% endif %}
                             {% endfor %}
-
                             {# Sous-catégories #}
                             {% for sousCategory in category.sousCategories %}
                                 <li class="dropdown-bottom-submenu dropdown nav-bottom-item">
@@ -124,12 +134,7 @@
                         </ul>
                     </li>
                 {% endfor %}
-                {# <li class="nav-item nav-bottom-item">
-                    <a class="nav-link nav-bottom-link {{ app.request.get('_route') == 'contact' ? 'active' : '' }}" 
-                       href="{{ path('contact') }}">Contact</a>
-                </li> #}
             </ul>
-            
         </div>
     </div>
 </nav>

@@ -213,11 +213,15 @@ html[data-theme=dark] {
 .badge {
     
     color: black;
-    
+    font-size: larger;
+}
+.descreption{
+    font-size: larger;
+    color: black;
 }
 
 .row {
-    padding-left: 286px;
+    padding-left: 164px;
     padding-right: 48px;
 }
 .card{

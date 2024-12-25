@@ -18,7 +18,7 @@ class PaymentController extends AbstractController
     {
 
         
-        Stripe::setApiKey($_ENV['STRIPE_SECRET_key']);
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
        
 
     

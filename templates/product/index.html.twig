@@ -9,17 +9,16 @@
         align-items: center;
         margin: 0 auto;
     }
-#review_rating {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-}
+    #review_rating {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+    }
     .rating input[type="radio"] {
         display: none;
     }
-
     .rating label {
         font-size: 2rem;
         color: #adadad;
@@ -28,70 +27,185 @@
         user-select: none;
         transition: color 0.2s;
     }
-
     .rating label::before {
         content: "★";
         font-size: 64px;
     }
- #review_content {
-    height:124px;
-    font-size: 24px;
-    text-align: center;
- }
- .required {
-    font-size: 48px;}
-
-    /* On ne gère plus le survol et la sélection en CSS, juste l'état "gold" */
+    #review_content {
+        height: 124px;
+        font-size: 24px;
+        text-align: center;
+    }
+    .required {
+        font-size: 48px;
+    }
     .rating label.gold {
         color: gold !important;
     }
+
+    /* Effet zoom au survol (optionnel) */
+    .zoom {
+        transition: transform 0.3s ease;
+        cursor: pointer;
+    }
+    .zoom:hover {
+        transform: scale(1.03);
+    }
 </style>
+
 <br>
 <div class="container my-5 responsive-margin">
     <div class="row justify-content-center mt-3">
+
+        <!-- COLONNE GAUCHE : Soit un carrousel (s'il y a des médias), soit une seule image -->
         <div class="col-md-6 position-relative d-block justify-content-center align-items-center">
-<img src="{{ asset('uploads/products/' ~ product.illustration) }}" class="img-fluid zoom" style="width: 480px; height: 290px; border: 1px solid #808080; border-radius: 10px;" alt="{{ product.name }}">
+
+            {% if product.medias|length > 0 %}
+                <!-- Carrousel Bootstrap (image principale + product.medias) -->
+                <div id="productCarousel" class="carousel slide mb-3"
+                     data-bs-ride="carousel"
+                     data-bs-interval="3000"
+                     style="width: 460px; height: 320px; border: 1px solid #808080; border-radius: 10px; overflow: hidden;">
+                    <div class="carousel-inner" style="height: 100%;">
+
+                        <!-- Slide principal = product.illustration (active) -->
+                        <div class="carousel-item active">
+                            <img
+                                src="{{ asset('uploads/products/' ~ product.illustration) }}"
+                                class="d-block zoom"
+                                alt="{{ product.name }}"
+                                style="object-fit: initial; width: 460px; height: 338px;"
+                            >
+                        </div>
+
+                        <!-- Slides suivants = product.medias -->
+                        {% for media in product.medias %}
+                            <div class="carousel-item">
+                                {% if media.isVideo %}
+                                    <video 
+                                        src="{{ asset('/uploads/products/' ~ media.fileName) }}"
+                                        class="d-block w-100 zoom"
+                                        controls
+                                    ></video>
+                                {% else %}
+                                    <img
+                                        src="{{ asset('/uploads/products/' ~ media.fileName) }}"
+                                        class="d-block zoom"
+                                        alt="{{ product.name }}"
+                                        style="object-fit: initial; width: 460px; height: 338px;"
+                                    >
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Contrôles “Précédent / Suivant” du carrousel -->
+                    <button class="carousel-control-prev"
+                            type="button"
+                            data-bs-target="#productCarousel"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Précédent</span>
+                    </button>
+                    <button class="carousel-control-next"
+                            type="button"
+                            data-bs-target="#productCarousel"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Suivant</span>
+                    </button>
+                </div>
+
+            {% else %}
+                <!-- Aucune média supplémentaire => on affiche simplement l'image principale -->
+                <div class="mb-3"
+                     style="width: 460px; height: 320px; border: 1px solid #808080; border-radius: 10px; overflow: hidden;">
+                    <img
+                        src="{{ asset('uploads/products/' ~ product.illustration) }}"
+                        class="img-fluid zoom"
+                        alt="{{ product.name }}"
+                        style="object-fit: initial; width: 100%; height: 100%;"
+                    >
+                </div>
+            {% endif %}
         </div>
+
+        <!-- COLONNE DROITE : détails du produit (nom, catégorie, description, prix, etc.) -->
         <div class="col-md-6">
+            <!-- Chemin de navigation : Catégorie > Sous-catégorie > Nom du produit -->
             <small>
                 <i>
-                    <a href="{{ path('app_category', {slug : product.category.slug }) }}" class="mb-3">{{ product.category.name }}</a>
+                    <a href="{{ path('app_category', { slug: product.category.slug }) }}" class="mb-3">
+                        {{ product.category.name }}
+                    </a>
                     {% if product.sousCategory %}
-                        > <a href="{{ path('app_souscategory', {slug : product.sousCategory.slug }) }}">{{ product.sousCategory.name }}</a> >
+                        >
+                        <a href="{{ path('app_souscategory', { slug: product.sousCategory.slug }) }}">
+                            {{ product.sousCategory.name }}
+                        </a> >
                     {% endif %}
                     {{ product.name }}
                 </i>
             </small>
+            
             <h1>{{ product.name }}</h1>
             <span class="d-block mb-3">
-                <span class="badge bg-gris">Prix TTC : {{ product.pricewt | price }}</span>
+                <!-- Prix TTC calculé via product.pricewt (ou priceWt) -->
+                <span class="badge bg-gris">
+                    Prix TTC : {{ product.pricewt | price }}
+                </span>
             </span>
+            <div class="description mt-3" style="font-weight: 600;">
+            <!-- Description du produit -->
+            <h3>Description</h3>
             {{ product.description | raw }}
+            
+            </div>
+            <!-- Poids & Dimensions (si disponibles) -->
+            {% if product.weight or product.dimensions %}
+                <div class="descreption mt-3">
+                    {% if product.weight %}
+                        <p><strong>Poids :</strong> {{ product.weight }} kg</p>
+                    {% endif %}
+                    {% if product.dimensions %}
+                        <p><strong>Dimensions :</strong> {{ product.dimensions }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
 
+            <!-- Bouton "Ajouter au panier" + gestion de la wishlist -->
             <div class="d-flex align-items-center justify-content-between mt-3 flex-wrap">
                 <div class="d-flex align-items-center w-100 mb-5">
-                    <a href="{{ path('app_cart_add', {id : product.id }) }}" class="btn btn-primary btn-dark flex-grow-1 me-2">Ajouter au panier</a>
-
+                    <a href="{{ path('app_cart_add', { id: product.id }) }}"
+                       class="btn btn-primary btn-dark flex-grow-1 me-2">
+                       Ajouter au panier
+                    </a>
+                    
                     {% if app.user %}
                         {% if product in app.user.wishlists %}
-                            <a class="btn btn-dark p-1 wishlist-added" href="{{ path('app_account_wishlist_remove', {id: product.id }) }}">
-                                <i data-feather="heart" class="text-danger"></i> <span class="wishlist-count">1</span>
+                            <a class="btn btn-dark p-1 wishlist-added"
+                               href="{{ path('app_account_wishlist_remove', { id: product.id }) }}">
+                                <i data-feather="heart" class="text-danger"></i> 
+                                <span class="wishlist-count">1</span>
                             </a>
                         {% else %}
-                            <a class="btn btn-dark p-1" href="{{ path('app_account_wishlist_add', {id: product.id }) }}">
-                               
+                            <a class="btn btn-dark p-1"
+                               href="{{ path('app_account_wishlist_add', { id: product.id }) }}">
+                                <!-- Icône ou texte souhaité -->
                             </a>
                         {% endif %}
                     {% else %}
-                        <a href="#collapseExample" class="btn btn-dark p-1" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample">
-                            
+                        <a href="#collapseExample" class="btn btn-dark p-1" data-bs-toggle="collapse"
+                           role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <!-- Icône ou texte souhaité -->
                         </a>
                     {% endif %}
-                    <div class="row justify-content-center ">
-                        <div class="col-md-12 p-4 ">
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 p-4">
                             <div class="collapse" id="collapseExample">
-                                <div class="card card-body ">
-                                    Pour utiliser les avantages de la wishlist:
+                                <div class="card card-body">
+                                    Pour utiliser les avantages de la wishlist :
                                     <a href="{{ path('app_login') }}">Connectez-vous</a>
                                     <a href="{{ path('app_register') }}"> ou créez votre compte client.</a>
                                 </div>
@@ -100,19 +214,27 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- FORMULAIRE POUR L'AJOUT D'AVIS -->
+            {{ form_start(reviewForm) }}
+                {{ form_row(reviewForm.content) }}
+                
+                <!-- Notation par étoiles -->
+                <div class="rating" id="star-rating">
+                    {{ form_widget(reviewForm.rating) }}
+                </div>
+                <br>
+                
+                <button 
+                    type="submit" 
+                    class="btn btn-primary btn-dark flex-grow-1 me-2"
+                    style="width: 264px; margin-left: 154px;"
+                >
+                    Envoyer
+                </button>
+            {{ form_end(reviewForm) }}
 
-               
-    {{ form_start(reviewForm) }}
-        {{ form_row(reviewForm.content) }}
-        <div class="rating" id="star-rating">
-            {{ form_widget(reviewForm.rating) }}
-        </div>
-        <br>
-        <button type="submit" class="btn btn-primary btn-dark flex-grow-1 me-2" style="width: 264px;
-    margin-left: 154px;">Envoyer</button>
-    {{ form_end(reviewForm) }}
-</div>
-
+            <!-- Liste des avis existants -->
             <h3>Avis des clients</h3>
             {% if product.reviews|length > 0 %}
                 <ul class="list-group mb-3">
@@ -140,49 +262,47 @@
         </div>
     </div>
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        /* GESTION RATING (étoiles) */
         const ratingContainer = document.getElementById('star-rating');
-        const inputs = ratingContainer.querySelectorAll('input[type="radio"]');
-        const labels = ratingContainer.querySelectorAll('label');
+        if (ratingContainer) {
+            const inputs = ratingContainer.querySelectorAll('input[type="radio"]');
+            const labels = ratingContainer.querySelectorAll('label');
 
-        function highlightStars(num) {
+            function highlightStars(num) {
+                labels.forEach((label, index) => {
+                    if (index < num) {
+                        label.classList.add('gold');
+                    } else {
+                        label.classList.remove('gold');
+                    }
+                });
+            }
+
             labels.forEach((label, index) => {
-                if (index < num) {
-                    label.classList.add('gold');
-                } else {
-                    label.classList.remove('gold');
-                }
-            });
-        }
-
-        labels.forEach((label, index) => {
-            label.addEventListener('mouseenter', () => {
-                // Survol : on met en gold toutes les étoiles jusqu'à celle-ci
-                highlightStars(index + 1);
-            });
-
-            label.addEventListener('mouseleave', () => {
-                // Quand on quitte le survol, on vérifie si une étoile est sélectionnée
-                const checkedInput = ratingContainer.querySelector('input[type="radio"]:checked');
-                if (checkedInput) {
-                    highlightStars(checkedInput.value);
-                } else {
-                    highlightStars(0);
-                }
+                label.addEventListener('mouseenter', () => {
+                    highlightStars(index + 1);
+                });
+                label.addEventListener('mouseleave', () => {
+                    const checkedInput = ratingContainer.querySelector('input[type="radio"]:checked');
+                    if (checkedInput) {
+                        highlightStars(checkedInput.value);
+                    } else {
+                        highlightStars(0);
+                    }
+                });
+                label.addEventListener('click', () => {
+                    inputs[index].checked = true;
+                    highlightStars(index + 1);
+                });
             });
 
-            label.addEventListener('click', () => {
-                // Au clic, on fixe la valeur
-                inputs[index].checked = true;
-                highlightStars(index + 1);
-            });
-        });
-
-        // Initialiser l'affichage si une valeur est déjà sélectionnée
-        const checkedInput = ratingContainer.querySelector('input[type="radio"]:checked');
-        if (checkedInput) {
-            highlightStars(checkedInput.value);
+            const checkedInput = ratingContainer.querySelector('input[type="radio"]:checked');
+            if (checkedInput) {
+                highlightStars(checkedInput.value);
+            }
         }
     });
 </script>
