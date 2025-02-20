@@ -51,81 +51,138 @@
     .zoom:hover {
         transform: scale(1.03);
     }
+    /* --- Styles pour notre carrousel custom --- */
+    .carousel-container {
+        width: 460px;
+        height: 320px;
+        border: 1px solid #808080;
+        border-radius: 10px;
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 1rem;
+    }
+    .carousel-item {
+        display: none;
+        width: 100%;
+        height: 100%;
+    }
+    .carousel-item.active {
+        display: block;
+    }
+    .carousel-nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: rgba(0, 0, 0, 0.3);
+        color: #fff;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        font-weight: bold;
+        z-index: 2;
+    }
+    .carousel-nav-btn:hover {
+        background: rgba(0, 0, 0, 0.5);
+    }
+    #carouselPrev {
+        left: 0;
+    }
+    #carouselNext {
+        right: 0;
+    }
+
+    /* --- Styles pour le modal custom vidéo --- */
+    #videoModalCustom {
+        display: none; /* caché par défaut */
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.8);
+        /* l’arrière-plan semi-transparent */
+    }
+    #videoModalContent {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #000; /* fond noir */
+        padding: 1rem;
+        border-radius: 8px;
+        max-width: 800px;
+        width: 90%;
+    }
+    #videoModalClose {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.5rem;
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+    }
 </style>
 
 <br>
 <div class="container my-5 responsive-margin">
     <div class="row justify-content-center mt-3">
 
-        <!-- COLONNE GAUCHE : Soit un carrousel (s'il y a des médias), soit une seule image -->
-        <div class="col-md-6 position-relative d-block justify-content-center align-items-center">
-
+        <!-- COLONNE GAUCHE : Carrousel custom -->
+        <div class="col-md-6 d-flex ">
             {% if product.medias|length > 0 %}
-                <!-- Carrousel Bootstrap (image principale + product.medias) -->
-                <div id="productCarousel" class="carousel slide mb-3"
-                     data-bs-ride="carousel"
-                     data-bs-interval="3000"
-                     style="width: 460px; height: 320px; border: 1px solid #808080; border-radius: 10px; overflow: hidden;">
-                    <div class="carousel-inner" style="height: 100%;">
-
-                        <!-- Slide principal = product.illustration (active) -->
-                        <div class="carousel-item active">
-                            <img
-                                src="{{ asset('uploads/products/' ~ product.illustration) }}"
-                                class="d-block zoom"
-                                alt="{{ product.name }}"
-                                style="object-fit: initial; width: 460px; height: 338px;"
-                            >
-                        </div>
-
-                        <!-- Slides suivants = product.medias -->
-                        {% for media in product.medias %}
-                            <div class="carousel-item">
-                                {% if media.isVideo %}
-                                    <video 
-                                        src="{{ asset('/uploads/products/' ~ media.fileName) }}"
-                                        class="d-block w-100 zoom"
-                                        controls
-                                    ></video>
-                                {% else %}
-                                    <img
-                                        src="{{ asset('/uploads/products/' ~ media.fileName) }}"
-                                        class="d-block zoom"
-                                        alt="{{ product.name }}"
-                                        style="object-fit: initial; width: 460px; height: 338px;"
-                                    >
-                                {% endif %}
-                            </div>
-                        {% endfor %}
+                <div class="carousel-container" id="customCarousel">
+                    <!-- Slide principal = product.illustration (active) -->
+                    <div class="carousel-item active">
+                        <img 
+                            src="{{ asset('uploads/products/' ~ product.illustration) }}"
+                            alt="{{ product.name }}"
+                            class="zoom"
+                            style="object-fit: initial; width: 100%; height: 100%;"
+                        >
                     </div>
+                    <!-- Slides suivants = product.medias -->
+                    {% for media in product.medias %}
+                        <div class="carousel-item">
+                            {% if media.isVideo %}
+                                <!-- Affiche video.png en placeholder -->
+                                <img 
+                                    src="{{ asset('uploads/products/video.png') }}"
+                                    alt="video placeholder"
+                                    class="zoom"
+                                    style="object-fit: initial; width: 100%; height: 100%;"
+                                    data-video-url="{{ asset('/uploads/products/' ~ media.fileName) }}"
+                                >
+                            {% else %}
+                                <img 
+                                    src="{{ asset('/uploads/products/' ~ media.fileName) }}"
+                                    alt="{{ product.name }}"
+                                    class="zoom"
+                                    style="object-fit: initial; width: 100%; height: 100%;"
+                                >
+                            {% endif %}
+                        </div>
+                    {% endfor %}
 
-                    <!-- Contrôles “Précédent / Suivant” du carrousel -->
-                    <button class="carousel-control-prev"
-                            type="button"
-                            data-bs-target="#productCarousel"
-                            data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Précédent</span>
-                    </button>
-                    <button class="carousel-control-next"
-                            type="button"
-                            data-bs-target="#productCarousel"
-                            data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Suivant</span>
-                    </button>
+                    <!-- Boutons Prev / Next -->
+                    <button id="carouselPrev" class="carousel-nav-btn">‹</button>
+                    <button id="carouselNext" class="carousel-nav-btn">›</button>
                 </div>
-
             {% else %}
-                <!-- Aucune média supplémentaire => on affiche simplement l'image principale -->
-                <div class="mb-3"
-                     style="width: 460px; height: 320px; border: 1px solid #808080; border-radius: 10px; overflow: hidden;">
-                    <img
-                        src="{{ asset('uploads/products/' ~ product.illustration) }}"
-                        class="img-fluid zoom"
-                        alt="{{ product.name }}"
-                        style="object-fit: initial; width: 100%; height: 100%;"
-                    >
+                <!-- Pas de medias => juste product.illustration -->
+                <div class="carousel-container">
+                    <div class="carousel-item active" style="display:block;">
+                        <img 
+                            src="{{ asset('uploads/products/' ~ product.illustration) }}"
+                            alt="{{ product.name }}"
+                            class="zoom"
+                            style="object-fit: initial; width: 100%; height: 100%;"
+                        >
+                    </div>
                 </div>
             {% endif %}
         </div>
@@ -149,12 +206,25 @@
             </small>
             
             <h1>{{ product.name }}</h1>
-            <span class="d-block mb-3">
-                <!-- Prix TTC calculé via product.pricewt (ou priceWt) -->
-                <span class="badge bg-gris">
-                    Prix TTC : {{ product.pricewt | price }}
-                </span>
+            {% if product.promotion > 0 %}
+        <p>
+            <span style="text-decoration: line-through; color: #888;">
+                {{ product.pricewt|price }}
             </span>
+            <span style="color: green; font-weight: bold; margin-left: 8px;">
+                {{ product.getPriceWithPromotion()|price }}
+            </span>
+            <span class="badge bg-warning text-dark ms-2">
+                -{{ product.promotion }}%
+            </span>
+        </p>
+    {% else %}
+        <p>
+            <span style="font-weight: bold;">
+                {{ product.pricewt|price }}
+            </span>
+        </p>
+    {% endif %}
             <div class="description mt-3" style="font-weight: 600;">
             <!-- Description du produit -->
             <h3>Description</h3>
@@ -262,6 +332,81 @@
         </div>
     </div>
 </div>
+
+
+<!-- Modal custom pour la vidéo -->
+<div id="videoModalCustom">
+    <div id="videoModalContent">
+        <button id="videoModalClose" aria-label="Fermer">×</button>
+        <video id="modalVideo" width="100%" controls>
+            <source src="" type="video/mp4">
+        </video>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    /* ---- Carrousel custom ---- */
+    const carouselEl = document.getElementById('customCarousel');
+    if (carouselEl) {
+        let items = carouselEl.querySelectorAll('.carousel-item');
+        let currentIndex = 0;
+        items[currentIndex].classList.add('active');
+
+        const prevBtn = document.getElementById('carouselPrev');
+        const nextBtn = document.getElementById('carouselNext');
+
+        prevBtn.addEventListener('click', function() {
+            items[currentIndex].classList.remove('active');
+            currentIndex = (currentIndex - 1 + items.length) % items.length;
+            items[currentIndex].classList.add('active');
+        });
+        nextBtn.addEventListener('click', function() {
+            items[currentIndex].classList.remove('active');
+            currentIndex = (currentIndex + 1) % items.length;
+            items[currentIndex].classList.add('active');
+        });
+    }
+
+    /* ---- Ouverture du modal custom pour vidéo ---- */
+    const videoModal = document.getElementById('videoModalCustom');
+    const videoModalClose = document.getElementById('videoModalClose');
+    const modalVideo = document.getElementById('modalVideo');
+
+    // Toutes les images "video.png" qui ont data-video-url
+    const videoPlaceholders = document.querySelectorAll('img[data-video-url]');
+    videoPlaceholders.forEach(function(img) {
+        img.addEventListener('click', function() {
+            const videoUrl = img.getAttribute('data-video-url');
+            modalVideo.querySelector('source').setAttribute('src', videoUrl);
+            modalVideo.load();
+
+            // Afficher le modal
+            videoModal.style.display = 'block';
+        });
+    });
+
+    // Fermeture du modal
+    videoModalClose.addEventListener('click', function() {
+        videoModal.style.display = 'none';
+        modalVideo.pause();
+        modalVideo.querySelector('source').setAttribute('src', '');
+        modalVideo.load();
+    });
+
+    // Si on clique en dehors de la zone (optionnel)
+    videoModal.addEventListener('click', function(e) {
+        if (e.target === videoModal) {
+            // On ferme le modal
+            videoModal.style.display = 'none';
+            modalVideo.pause();
+            modalVideo.querySelector('source').setAttribute('src', '');
+            modalVideo.load();
+        }
+    });
+});
+</script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

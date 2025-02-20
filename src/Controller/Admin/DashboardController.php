@@ -10,6 +10,8 @@ use App\Entity\Product;
 use App\Entity\Category;
 use App\Entity\SousCategory;
 use App\Entity\ContactMessage;
+use App\Entity\ContactInfo;
+use App\Controller\Admin\ContactInfoCrudController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -51,6 +53,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Commandes', 'fas fa-clipboard-list', Order::class);
         yield MenuItem::linkToCrud('Header', 'fas fa-header', Header::class);
         yield MenuItem::linkToCrud('Messages de Contact', 'fas fa-envelope', ContactMessage::class);
+        yield MenuItem::linkToCrud('Contact Info', 'fa fa-info', ContactInfo::class);
+
         yield MenuItem::linkToUrl('Page d\'accueil', 'fas fa-arrow-left', $url);
        
 

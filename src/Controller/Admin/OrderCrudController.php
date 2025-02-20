@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -121,11 +122,17 @@ return $this->render('admin/order.html.twig', [
         return [
             IdField::new('id'),
             DateField::new('createdAt')->setLabel('Date'),
+            UrlField::new('shippingLabelUrl', 'Étiquette')
+            ->hideOnForm()
+            ->setLabel('Label Sendcloud')
+            ->setTextAlign('center')
+            ->onlyOnDetail(),
            NumberField::new('state')->setLabel('Statut')->setTemplatePath('admin/state.html.twig'),
             AssociationField ::new('user')->setLabel('Utilisateur'),
             TextField::new('carrierName')->setLabel('Transporteur'),
             NumberField::new('totalTva')->setLabel('Total TVA'),
             NumberField::new('totalWt')->setLabel('Total TTC'),
+           
             
         ];
     }

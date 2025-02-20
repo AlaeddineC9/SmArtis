@@ -52,5 +52,6 @@ class OrderType extends AbstractType
         $resolver->setDefaults([
             'addresses' => null
         ]);
+        $resolver->setDefault('carriers', []);
     }
 }

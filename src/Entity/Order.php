@@ -51,38 +51,64 @@ class Order
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $stripe_session_id = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $shippingReference = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $shippingLabelUrl = null;
+
     public function __construct()
     {
         $this->orderDetails = new ArrayCollection();
     }
 
-public function getTotalWt()
-{ 
-    $totalTTC = 0; 
-    $products = $this->getOrderDetails();
+    public function getTotalWt()
+    { 
+        $totalTTC = 0; 
+        $products = $this->getOrderDetails();
 
-    foreach ($products as $product) {
+        foreach ($products as $product) {
+
+            
+            $coeff= 1 + $product->getProductTva()/100;
+            $totalTTC += ($product->getProductPrice() * $coeff) * $product->getProductQuantity();
+        }
+        return $totalTTC + $this->getCarrierPrice();
+    }
+    public function getTotalTva()
+    {   
+        $totalTva = 0; 
+        $products = $this->getOrderDetails();
 
         
-        $coeff= 1 + $product->getProductTva()/100;
-        $totalTTC += ($product->getProductPrice() * $coeff) * $product->getProductQuantity();
-    }
-    return $totalTTC + $this->getCarrierPrice();
-}
-public function getTotalTva()
-{   
-   $totalTva = 0; 
-   $products = $this->getOrderDetails();
+        foreach ($products as $product) {
 
-    
-    foreach ($products as $product) {
-
-        
-        $coeff= $product->getProductTva()/100;
-        $totalTva += $product->getProductPrice() * $coeff;
+            
+            $coeff= $product->getProductTva()/100;
+            $totalTva += $product->getProductPrice() * $coeff;
+        }
+        return $totalTva;
     }
-    return $totalTva;
-}
+
+    public function getShippingReference(): ?string
+    {
+        return $this->shippingReference;
+    }
+    public function setShippingReference(?string $shippingReference): static
+    {
+        $this->shippingReference = $shippingReference;
+        return $this;
+    }
+
+    public function getShippingLabelUrl(): ?string
+    {
+        return $this->shippingLabelUrl;
+    }
+    public function setShippingLabelUrl(?string $shippingLabelUrl): static
+    {
+        $this->shippingLabelUrl = $shippingLabelUrl;
+        return $this;
+    }
 
 
     public function getId(): ?int

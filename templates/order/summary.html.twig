@@ -1,77 +1,57 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+<div class="container mt-5">
+    <h1>Récapitulatif de la commande</h1>
 
-	<div class="container mt-5">
-		<h1 style="margin-left:54px">Récapitulatif de ma commande</h1>
+    {% if order is defined and order is not null %}
+        <div>
+            <h2>Informations de livraison</h2>
+            <p>{{ order.delivery|raw }}</p>
+        </div>
 
-		<div class="row">
-			<div class="col-md-8">
-            <strong>Contenu de mon panier:</strong><br/>
-				<hr>
+        <div>
+            <h2>Détails de la commande</h2>
+            <ul>
+                {% for detail in order.orderDetails %}
+                    <li>
+                        {{ detail.productName }} –
+                        {{ detail.productQuantity }} ×
+                        {{ detail.productPrice|number_format(2, ',', ' ') }} € (HT)
+                        {% if detail.productTva %}
+                            + TVA : {{ detail.productTva }} %
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
 
-				{% for product in cart %}
+        <div>
+            <h2>Transporteur : {{ order.carrierName }}</h2>
+            <p>Frais d'expédition : {{ order.carrierPrice|number_format(2, ',', ' ') }} €</p>
+            {% if order.shippingReference %}
+                <p>Référence d'expédition : {{ order.shippingReference }}</p>
+            {% endif %}
+            {% if order.shippingLabelUrl %}
+                <p><a href="{{ order.shippingLabelUrl }}" target="_blank">Télécharger l'étiquette</a></p>
+            {% endif %}
+        </div>
 
-					<div class="row mt-2">
-
-						<div class="col-md-2">
-							<hr><img src="{{ asset('uploads/products/' ~ product.object.illustration) }}" 
-     alt="{{ product.object.name }}" 
-     class="img-fluid" 
-     style="width: 50px; height: 50px;">
-
-						</div>
-
-						<div class="col-md-6">
-
-							<hr>
-							<strong>{{product.object.name}}</strong>
-							<span class="d-block small">Prix unitaire :{{product.object.pricewt|price}}</span>
-						</div>
-						<div class="col-md-2 text-right">
-							<hr><span class="badge text-bg-secondary">x{{product.qty}}</span>
-						</div>
-						<div class="col-md-2">
-							<hr><strong>{{ (product.qty * product.object.pricewt) | price }}</strong>
-						</div>
-					</div>
-				{% endfor %}
-
-
-				<hr>
-				<strong>Votre adresse de livraison:</strong><br/>
-
-				{{choices.addresses.firstname}}
-				{{choices.addresses.lastname}}<br/>
-				{{choices.addresses.address}}<br/>
-				{{choices.addresses.city}} -
-				{{choices.addresses.country}}
-
-
-				<hr>
-				<strong>Votre transporteur :</strong><br/>
-				{{choices.carriers.name }}<br/>
-				{{choices.carriers.description }}
-			</div>
-			<div class="col-md-4 mt-5">
-				<div class="p3">
-					<div class="d-flex justify-content-between">
-						<span class="fw-bold">Total produit</span>
-                        <span>{{ fullCartQuantity }}</span>
-					</div>
-
-					<div class="d-flex justify-content-between mt-3">
-
-						<span class="fw-bold">Total transporteur</span>
-						<span>{{ choices.carriers.price | price }}</span>
-					</div>
-					<div class="d-flex justify-content-between mt-3">
-						<span class="fw-bold">Total commande</span>
-                        <span>{{ (totalWt + choices.carriers.price) | price }}</span>
-					</div>
-					<a href="{{ path ('app_payment', {'id_order' : order.id })}}" class="btn btn-success w-100 mb-5">Payer</a>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>{% endblock %}
+        <div>
+            <p>Total TTC : {{ totalWt|number_format(2, ',', ' ') }} €</p>
+        </div>
+    {% else %}
+        <p>Aucune commande à afficher.</p>
+    {% endif %}
+	{% if order is defined and order is not null %}
+    <a 
+        href="{{ path('app_payment', {'id_order': order.id}) }}" 
+        class="btn btn-success w-100 mb-5"
+    >
+        Payer
+    </a>
+{% else %}
+    <p>Aucune commande à afficher.</p>
+{% endif %}
+</div>
+{% endblock %}

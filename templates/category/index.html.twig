@@ -73,7 +73,25 @@
                         </a>
                         <div class="card-body text-center">
                             <h5 class="card-title mb-3">{{ product.name }}</h5>
-                            <span class="badge mb-3">Prix : {{ product.pricewt | price }}</span><br>
+                            {% if product.promotion > 0 %}
+        <p>
+            <span style="text-decoration: line-through; color: #888;">
+                {{ product.pricewt|price }}
+            </span><br>
+            <span style="color: green; font-weight: bold; margin-left: 8px;">
+                {{ product.getPriceWithPromotion()|price }}
+            </span>
+            <span class="badge bg-warning text-dark ms-2">
+                -{{ product.promotion }}%
+            </span>
+        </p>
+    {% else %}
+        <p>
+            <span style="font-weight: bold;">
+                {{ product.pricewt|price }}
+            </span>
+        </p>
+    {% endif %}
                             <a href="{{ path('app_product', {
                                 category_slug: product.category.slug,
                                 souscategory_slug: 'aucune',

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ContactInfo{% endblock %}
+
+{% block body %}
+    <h1>ContactInfo</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ contact_info.id }}</td>
+            </tr>
+            <tr>
+                <th>CompanyName</th>
+                <td>{{ contact_info.companyName }}</td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>{{ contact_info.phone }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ contact_info.email }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ contact_info.address }}</td>
+            </tr>
+            <tr>
+                <th>MapEmbedUrl</th>
+                <td>{{ contact_info.mapEmbedUrl }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_contact_info_index') }}">back to list</a>
+
+    <a href="{{ path('app_contact_info_edit', {'id': contact_info.id}) }}">edit</a>
+
+    {{ include('contact_info/_delete_form.html.twig') }}
+{% endblock %}

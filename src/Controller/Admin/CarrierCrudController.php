@@ -35,6 +35,9 @@ class CarrierCrudController extends AbstractCrudController
             NumberField::new('price')
             ->setLabel('Prix T.T.C')
             ->setHelp('Prix T.T.C du transporteur sans le sigle €'),
+            TextField::new('codeTransporter', 'Code du Service')
+                ->setHelp('Ex: "mondial_relay", "colissimo", etc.')
+                ->hideOnIndex(false),
         ];
     }
     

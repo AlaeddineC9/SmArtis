@@ -36,6 +36,9 @@ class Product
     #[ORM\Column(type:'float')]
     private ?float $tva = null;
 
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $promotion = null;
+
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'products')]
     #[ORM\JoinColumn(nullable:false)]
     private ?Category $category = null;
@@ -105,6 +108,36 @@ class Product
     {
         $this->name = $name;
         return $this;
+    }
+
+
+    public function getPromotion(): ?float
+    {
+        return $this->promotion;
+    }
+
+    public function setPromotion(?float $promotion): self
+    {
+        $this->promotion = $promotion;
+        return $this;
+    }
+
+    public function getPriceWithPromotion(): ?float
+    {
+        // Prix de base TTC
+        $basePrice = $this->getPriceWt();
+        if (!$basePrice) {
+            return null; // si pas de prix défini
+        }
+
+        // Si promotion est null ou 0, renvoyer le prix normal
+        if ($this->promotion === null || $this->promotion <= 0) {
+            return $basePrice;
+        }
+
+        // Calcul de remise : ex. 20% => on retire 20% du prix
+        $discount = $basePrice * ($this->promotion / 100.0);
+        return $basePrice - $discount;
     }
 
     public function getSlug(): ?string

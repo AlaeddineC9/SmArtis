@@ -16,6 +16,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
+
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 
 
@@ -65,6 +66,8 @@ class ProductCrudController extends AbstractCrudController
         // Champs poids & dimensions
         $weight = NumberField::new('weight', 'Poids (kg)');
         $dimensions = TextField::new('dimensions', 'Dimensions');
+        $promotion = NumberField::new('promotion', 'Promotion (%)')
+            ->setHelp('Pourcentage de réduction, ex. "20" pour -20%');
 
         $category = AssociationField::new('category', 'Catégorie associée')->autocomplete();
         $sousCategory = AssociationField::new('sousCategory', 'Sous-catégorie associée');
@@ -83,14 +86,16 @@ class ProductCrudController extends AbstractCrudController
             $isHomepage,
             $slug,
             $description,
-            $illustration, // vous pourriez aussi le remplacer par un champ VichUploader si vous le souhaitez
+            $illustration, 
             $price,
             $tva,
+            $promotion,
             $weight,
             $dimensions,
             $category,
             $sousCategory,
             $medias,
+            
         ];
     }
 }

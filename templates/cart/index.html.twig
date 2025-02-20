@@ -2,84 +2,97 @@
 
 {% block body %}
 <div class="container my-5 responsive-margin">
-		<h1 class="mb-5" style="margin-left:54px; margin-top:86px;">Mon panier</h1>
+	<h1 class="mb-5" style="margin-left:54px; margin-top:86px;">Mon panier</h1>
 
-		<table class="table table-hover">
-			<thead class="thead-dark">
+	<table class="table table-hover">
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col">Produit</th>
+				<th scope="col">Nom</th>
+				<th scope="col">Prix unitaire</th>
+				<th scope="col">Quantité</th>
+				<th scope="col">Total</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for product in cart %}
 				<tr>
-					<th scope="col">Produit</th>
-					<th scope="col">Nom</th>
-					<th scope="col">Prix unitaire</th>
-					<th scope="col">Quantité</th>
-					<th scope="col">Total</th>
+					<td class="text-center">
+						<div class="p-1">
+							<img 
+								src="{{ asset('uploads/products/' ~ product.object.illustration) }}" 
+								alt="{{ product.object.name }}" 
+								class="img-fluid" 
+								style="width: 50px; height: 50px;"
+							>
+						</div>
+					</td>
+					<td class="text-center">
+						<strong>{{ product.object.name }}</strong>
+					</td>
+					<td class="text-center">
+						{# Prix TTC (avec promotion si applicable) #}
+						{{ product.object.getPriceWithPromotion() | price }}
+					</td>
+					<td class="text-center">
+						<a 
+							href="{{ path('app_cart_decrease', { id : product.object.id } ) }}" 
+							class="change-qty" 
+							style="color: red;"
+						>
+							<strong>-</strong>
+						</a>
+						<span class="badge text-bg-secondary">
+							x {{ product.qty }}
+						</span>
+						<a 
+							href="{{ path('app_cart_add', { id : product.object.id } ) }}" 
+							class="change-qty" 
+							style="color: green;"
+						>
+							<strong>+</strong>
+						</a>
+					</td>
+					<td class="text-center">
+						{# Total TTC (qty * prix TTC avec promo) #}
+						<strong>{{ (product.qty * product.object.getPriceWithPromotion()) | price }}</strong>
+					</td>
 				</tr>
-			</thead>
-			<tbody>
-				{% for product in cart %}
-					<tr>
-						<td class="text-center">
-							<div class="p-1">
-								<img src="{{ asset('uploads/products/' ~ product.object.illustration) }}" 
-     alt="{{ product.object.name }}" 
-     class="img-fluid" 
-     style="width: 50px; height: 50px;">
+			{% endfor %}
+		</tbody>
+	</table>
 
-							</div>
-						</td>
-						<td class="text-center">
-							<strong>{{product.object.name}}</strong>
-						</td>
-						<td class="text-center">
-							{{ product.object.pricewt | price }}
-						</td>
-						<td class="text-center">
-    <a href="{{ path('app_cart_decrease', { id : product.object.id } ) }}" class="change-qty" style="color: red;">
-        <strong>-</strong>
-    </a>
-    <span class="badge text-bg-secondary">
-        x
-        {{product.qty}}</span>
-    <a href="{{ path('app_cart_add', { id : product.object.id } ) }}" class="change-qty" style="color: green;">
-        <strong>+</strong>
-    </a>
-</td>
-						<td class="text-center">
-							<strong>{{ (product.qty * product.object.pricewt) | price }}</strong>
-						</td>
-					</tr>
-				{% endfor %}
+	<a 
+		href="{{ path('app_cart_remove') }}" 
+		class="small d-block mt-3"
+		style="font-weight: bold; color: red; font-style: italic;"
+	>
+		<i class="fas fa-trash-alt"></i> Vider le panier
+	</a>
 
-			</tbody>
-		</table>
-		<a href="{{ path('app_cart_remove') }}" class="small d-block mt-3" style="font-weight: bold; color: red; font-style: italic;">
-			<i class="fas fa-trash-alt"></i> Vider le panier
-		</a>
-
-
-		<div class="col-md-4">
-
-			<div class="bg-light p-3">
-				<div class="d-flex justify-content-between">
-					<span class="fw-bold">Total produit</span>
-					<span>{{ fullCartQuantity }}</span>
-				</div>
-				<div class="d-flex justify-content-between mt-3">
-
-					<span class="fw-bold">Prix total T.T.C</span>
-					<span>{{ totalwt | price }}</span>
-				</div>
+	<div class="col-md-4">
+		<div class="bg-light p-3">
+			<div class="d-flex justify-content-between">
+				<span class="fw-bold">Total produit</span>
+				<span>{{ fullCartQuantity }}</span>
 			</div>
-			<a href="{{ path('app_order') }}"  class="btn btn-success w-100 mb-5">Commander</a>
-
-
+			<div class="d-flex justify-content-between mt-3">
+    <span class="fw-bold">Prix total T.T.C</span>
+    <span>
+        {% set totalPromo = 0 %}
+        {% for item in cart %}
+            {% set totalPromo = totalPromo + item.qty * item.object.getPriceWithPromotion() %}
+        {% endfor %}
+        {{ totalPromo | price }}
+    </span>
+</div>
 		</div>
+		<a 
+			href="{{ path('app_order') }}"  
+			class="btn btn-success w-100 mb-5"
+		>
+			Commander
+		</a>
 	</div>
 </div>
-</div>
-</div>
-
-
 {% endblock %}
-
-
-
