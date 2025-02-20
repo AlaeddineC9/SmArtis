@@ -19,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class OrderController extends AbstractController
 {
     /**
-     * Étape 1 : Affiche le formulaire d'adresse et de transporteur (2 moins chers)
+     * Étape 1 : Affiche le formulaire d'adresse et de transporteur (choix des 2 moins chers)
      */
     #[Route('/commande/livraison', name: 'app_order')]
     public function index(
@@ -30,13 +30,12 @@ class OrderController extends AbstractController
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-        
         $addresses = $user->getAddresses();
         if (count($addresses) === 0) {
             return $this->redirectToRoute('app_account_address_form');
         }
         
-        // On prend la première adresse pour paramétrer l'API Sendcloud
+        // Calcul des carriers éphémères
         $addressObj = $addresses[0];
         $recipientParams = [
             'to_country_code' => $addressObj->getCountry(),
@@ -52,7 +51,6 @@ class OrderController extends AbstractController
         
         $carriers = [];
         try {
-            // Récupération des options d'expédition depuis Sendcloud
             $shippingOptions = $sendcloudService->fetchShippingOptionsForRecipient(
                 $recipientParams,
                 $additionalParams
@@ -77,13 +75,11 @@ class OrderController extends AbstractController
                 }
                 usort($tempList, fn($a, $b) => $a['price'] <=> $b['price']);
                 $tempList = array_slice($tempList, 0, 2);
-                
                 foreach ($tempList as $item) {
-                    $c = new Carrier();
-                    // On s'assure que le code n'est pas "???"
                     if ($item['code'] === '???') {
                         continue;
                     }
+                    $c = new Carrier();
                     $c->setCodeTransporter($item['code']);
                     $c->setName($item['name']);
                     $c->setPrice($item['price']);
@@ -131,16 +127,73 @@ class OrderController extends AbstractController
             return $this->redirectToRoute('app_cart');
         }
         
-        // On recrée le formulaire pour obtenir les données POSTées
+        // Recalcul des carriers pour recréer le formulaire (pour la validité du champ carriers)
+        $user = $this->getUser();
+        $addresses = $user->getAddresses();
+        $addressObj = $addresses[0];
+        $recipientParams = [
+            'to_country_code' => $addressObj->getCountry(),
+            'to_postal_code'  => $addressObj->getPostal(),
+        ];
+        $additionalParams = [
+            'functionalities' => ['b2c' => true],
+            'weight' => [
+                'value' => '1.5',
+                'unit'  => 'kg'
+            ]
+        ];
+        $carriers = [];
+        try {
+            $shippingOptions = $sendcloudService->fetchShippingOptionsForRecipient(
+                $recipientParams,
+                $additionalParams
+            );
+            if (!empty($shippingOptions['data'])) {
+                $tempList = [];
+                foreach ($shippingOptions['data'] as $option) {
+                    $code = $option['code'] ?? '???';
+                    $productName = $option['product']['name'] ?? $code;
+                    if (!empty($option['quotes'])) {
+                        foreach ($option['quotes'] as $quote) {
+                            $val = $quote['price']['total']['value'] ?? null;
+                            if ($val && (float)$val > 0) {
+                                $tempList[] = [
+                                    'code'  => $code,
+                                    'name'  => $productName,
+                                    'price' => (float)$val
+                                ];
+                            }
+                        }
+                    }
+                }
+                usort($tempList, fn($a, $b) => $a['price'] <=> $b['price']);
+                $tempList = array_slice($tempList, 0, 2);
+                foreach ($tempList as $item) {
+                    if ($item['code'] === '???') {
+                        continue;
+                    }
+                    $c = new Carrier();
+                    $c->setCodeTransporter($item['code']);
+                    $c->setName($item['name']);
+                    $c->setPrice($item['price']);
+                    $c->setDescription('Option depuis Sendcloud');
+                    $carriers[] = $c;
+                }
+            }
+        } catch (\Exception $e) {
+            $this->addFlash('danger', "Impossible de récupérer les transporteurs : " . $e->getMessage());
+        }
+        
+        // Recréation du formulaire avec toutes les options
         $form = $this->createForm(OrderType::class, null, [
-            'addresses' => $this->getUser()->getAddresses(),
+            'addresses' => $addresses,
+            'carriers'  => $carriers,
         ]);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            // Création de l'objet Order
             $order = new Order();
-            $order->setUser($this->getUser());
+            $order->setUser($user);
             $order->setCreatedAt(new \DateTime());
             $order->setState(1);
             
@@ -170,17 +223,16 @@ class OrderController extends AbstractController
                 $order->setCarrierPrice(0.0);
             }
             
-            // Création des OrderDetail en tenant compte de la promotion
+            // Création des OrderDetail en tenant compte du prix promotionné
             $totalWeightKg = 0.0;
             foreach ($products as $item) {
                 $product = $item['object'];
                 $qty = $item['qty'];
                 $totalWeightKg += ($product->getWeight() ?? 0.0) * $qty;
                 
-                // Utiliser le prix TTC promotionné (getPriceWithPromotion) si applicable
+                // Utiliser le prix TTC promotionné et le convertir en HT
                 $priceTtcRemise = $product->getPriceWithPromotion();
                 $tvaRate = $product->getTva() ?? 0.0;
-                // Calcul du prix HT : prix TTC / (1 + tva/100)
                 $priceHtRemise = $priceTtcRemise / (1 + $tvaRate / 100);
                 
                 $orderDetail = new OrderDetail();
@@ -194,9 +246,9 @@ class OrderController extends AbstractController
             }
             
             $entityManager->persist($order);
-            $entityManager->flush(); // commande créée
+            $entityManager->flush();
             
-            // Préparation des paramètres pour l'appel Sendcloud
+            // Préparation des paramètres pour l'appel à Sendcloud
             $recipientParams = [
                 'to_country_code' => $addressObj->getCountry(),
                 'to_postal_code'  => $addressObj->getPostal()
@@ -242,7 +294,13 @@ class OrderController extends AbstractController
                 }
             }
             
-            // Appel à Sendcloud pour générer l'étiquette.
+            // Correction : Préfixer le shipping_method avec "sendcloud:" s'il n'est pas déjà préfixé.
+            $code = $chosenMethod ?? $chosenCarrier->getCodeTransporter();
+            if (!str_starts_with($code, 'sendcloud:')) {
+                $code = 'sendcloud:' . $code;
+            }
+            
+            // Appel à Sendcloud pour générer l'étiquette
             if ($chosenCarrier instanceof Carrier) {
                 $parcelData = [
                     'name'           => $addressObj->getFirstname().' '.$addressObj->getLastname(),
@@ -254,8 +312,7 @@ class OrderController extends AbstractController
                     'telephone'      => $addressObj->getPhone(),
                     'email'          => $this->getUser()->getEmail(),
                     'request_label'  => true,
-                    // On utilise le shipping_method le moins cher s'il a été trouvé, sinon le code du carrier sélectionné
-                    'shipping_method'=> $chosenMethod ?? $chosenCarrier->getCodeTransporter(),
+                    'shipping_method'=> $code,
                 ];
                 
                 try {
@@ -267,7 +324,7 @@ class OrderController extends AbstractController
                             $order->setShippingLabelUrl($parcel['label_url']);
                             $this->addFlash('info', "Étiquette Sendcloud générée : " . $parcel['label_url']);
                             
-                            // Optionnel : envoi par email de l'étiquette
+                            // Optionnel : envoi par email à l'administrateur
                             $pdfContent = @file_get_contents($parcel['label_url']);
                             if ($pdfContent !== false) {
                                 $email = (new Email())
@@ -298,6 +355,9 @@ class OrderController extends AbstractController
         return $this->redirectToRoute('app_cart');
     }
     
+    /**
+     * Étape 3 : Affichage du récapitulatif de la commande.
+     */
     #[Route('/commande/recapitulatif/{id}', name: 'app_order_summary')]
     public function summary(
         int $id,
@@ -316,9 +376,9 @@ class OrderController extends AbstractController
         
         $totalProducts = 0.0;
         foreach ($order->getOrderDetails() as $detail) {
-            $ht = $detail->getProductPrice();
-            $tva = $detail->getProductTva();
-            $qty = $detail->getProductQuantity();
+            $ht   = $detail->getProductPrice();
+            $tva  = $detail->getProductTva();
+            $qty  = $detail->getProductQuantity();
             $priceTtc = $ht * (1 + $tva / 100);
             $totalProducts += $priceTtc * $qty;
         }
