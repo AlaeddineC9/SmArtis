@@ -142,4 +142,8 @@ class Address
 
         return $this;
     }
+    public function getFullName(): string
+{
+    return $this->getFirstname() . ' ' . $this->getLastname();
+}
 }

@@ -2,11 +2,34 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h1>Choix de l'adresse de livraison</h1>
-    <div>
-        {{ form_start(deliverForm) }}
-            {{ form_widget(deliverForm) }}
-        {{ form_end(deliverForm) }}
-    </div>
+    <h1>Choix de l'adresse et du transporteur</h1>
+    
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+    
+    {{ form_start(deliverForm, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Adresse de livraison</h3>
+            </div>
+            <div class="card-body">
+                {{ form_row(deliverForm.addresses) }}
+                {{ form_errors(deliverForm.addresses) }}
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>Transporteur</h3>
+            </div>
+            <div class="card-body">
+                {{ form_row(deliverForm.carriers) }}
+                {{ form_errors(deliverForm.carriers) }}
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-success">Valider la commande</button>
+    {{ form_end(deliverForm) }}
 </div>
 {% endblock %}

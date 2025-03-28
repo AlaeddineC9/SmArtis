@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>À propos de SmArtis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {# Intégration de AOS pour les animations #}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.css" integrity="sha512-pgybU8z6gZN4x4hxLIemYkZ6ifH3/ZqQ83MDb7eBGrmtqVJBn9r+NLaZl+05wIRgz0yifUp6DhaZBlC2p8yWsw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body, html {
+      font-family: 'Helvetica', sans-serif;
+      color: #333;
+      line-height: 1.6;
+    }
+    /* Section Hero */
+    .hero {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+    .hero video {
+      width: 100%;
+      height: 60%;
+      object-fit: cover;
+      display: block;
+    }
+    .hero-overlay {
+      position: relative;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 58%;
+      background: rgba(0,0,0,0.2); 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      text-align: center;
+      padding-bottom: 2px;
+    }
+    .hero-overlay h1 {
+      font-size: 4em;
+      text-weight: bold;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+       background: linear-gradient(90deg, #F2DA5E,#D9961A, #F2D022);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    }
+    /* Section About */
+    .about-section {
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .about-section h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 3em;
+      color: #222;
+    }
+    .about-section p {
+      margin-bottom: 20px;
+      font-size: 1.8em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  {# Section Hero avec vidéo publicitaire #}
+  <div class="hero-overlay" data-aos="fade-in" data-aos-duration="1500">
+      <h1>Découvrez l’univers unique de SmArtis !</h1>
+    </div>
+    <div class='row'>
+      <div class='col-md-12'>
+       
+      </div>
+  <section class="hero">
+  
+    <video autoplay muted loop playsinline>
+      <source src="{{ asset('uploads/videoSA.mp4') }}" type="video/mp4">
+      Votre navigateur ne supporte pas les vidéos.
+    </video>
+    
+  </section>
+
+  {# Section "À propos" #}
+  <section class="about-section" data-aos="fade-up" data-aos-duration="1500">
+    <h2>À propos de SmArtis</h2>
+    <p>SmArtis, c’est bien plus qu’une marque :<br> C’est une philosophie où l’art rencontre l’intelligence créative pour transformer et sublimer le quotidien.<br> En récupérant des éléments issus de la nature ou provenant d’associations, SmArtis redonne vie à des objets oubliés en leur offrant une nouvelle identité, souvent bien éloignée de leur usage initial.<br> Chaque création est le fruit d’un travail artisanal, guidé par l’écoute du cœur et des émotions, qui se traduit par des pièces uniques et porteuses de sens.<br></p>
+    <p>En osant imaginer autrement, SmArtis incarne l’engagement et la responsabilité sociale : aider les autres, créer avec passion, offrir et utiliser des objets qui véhiculent un message positif.<br> C’est cette alliance audacieuse entre recyclage, art et innovation qui fait de SmArtis une marque résolument tournée vers un bonheur partagé et une vision durable de la création.<br></p>
+    <p>Notre site vous invite à explorer la richesse de nos créations, tant par la diversité des matières utilisées que par l’originalité de nos méthodes d’assemblage. Pensés pour être fonctionnels ou simplement pour sublimer votre intérieur, nos objets faits main vous accompagnent lors des moments marquants de l’année et de votre vie : mariages, baptêmes, communions, anniversaires et bien plus encore.</p>
+    <p>Et si, malgré cette diversité, vous ne trouvez pas votre bonheur ? <br>Rien de plus simple !<br> Partagez-nous vos rêves, envies et projets, et nous nous chargerons de leur donner vie avec le plus grand soin et une attention particulière aux détails.</p>
+    
+  </section>
+</div>
+  {# Initialisation de AOS #}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.js" integrity="sha512-HoZgRBg26JhQnYf1w1kaHqwF8lCSfjpsYSfDXgTN04ZfT+6M+2YHDaZk6Ym+6Bmx0HdRFX1LjI/Dgl7+qc0smw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    AOS.init();
+  </script>
+  {# Vous pouvez ajouter ici d'autres animations JS si besoin #}
+</body>
+</html>
+{% endblock %}

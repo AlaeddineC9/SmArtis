@@ -6,8 +6,10 @@ use App\Repository\CarrierRepository;
 use App\Service\SendcloudService;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CarrierRepository::class)]
+#[UniqueEntity(fields: ['codeTransporter'])]
 class Carrier
 {
     #[ORM\Id]
