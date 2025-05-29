@@ -1,170 +1,212 @@
 <!-- Première Navbar (Noire) -->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top navbar-top">
-    <div class="container-fluid">
-        <button class="navbar-toggler navbar-top-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTopCollapse" 
-                aria-controls="navbarTopCollapse" aria-expanded="false" aria-label="Basculer la navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse navbar-top-collapse" id="navbarTopCollapse">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0 navbar-top-nav">
-                <li class="nav-item nav-top-item">
-                    <a class="nav-link nav-top-link {{ app.request.get('_route') == 'app_home' ? 'active' : '' }}"
-                       href="{{ path('app_home') }}">
-                        Accueil
-                    </a>
-                </li>
-                <li class="nav-item nav-top-item">
-                    <a class="nav-link nav-top-link {{ app.request.get('_route') == 'app_about_us' ? 'active' : '' }}"
-   href="{{ path('app_about_us') }}">
-                       À propos de nous
-                    </a>
-                </li>
-                <li class="nav-item nav-top-item">
-                    <a class="nav-link nav-top-link {{ app.request.get('_route') == 'contact' ? 'active' : '' }}"
-                       href="{{ path('app_contact') }}">
-                       Contact
-                    </a>
-                </li>
-                {% if not app.user %}
-                    <!-- Bouton Connexion visible uniquement si l’utilisateur n’est pas connecté -->
-                    <li class="nav-item nav-top-item">
-                        <a class="nav-link nav-top-link" href="{{ path('app_login') }}">
-                            Connexion
-                        </a>
-                    </li>
-                {% endif %}
-            </ul>
+	<div class="container-fluid">
+		<div class="d-flex justify-content-between w-100">
+			<div class="d-flex">
+				<a class="nav-link text-white me-4 {{ app.request.get('_route') == 'app_home' ? 'active' : '' }}" href="{{ path('app_home') }}">
+					<i class="fas fa-home d-inline d-md-none"></i>
+					<span class="d-none d-md-inline">Accueil</span>
+				</a>
+				<a class="nav-link text-white me-4 {{ app.request.get('_route') == 'app_about_us' ? 'active' : '' }}" href="{{ path('app_about_us') }}">
+					<i class="fas fa-info-circle d-inline d-md-none"></i>
+					<span class="d-none d-md-inline">À propos</span>
+				</a>
+				<a class="nav-link text-white me-4 {{ app.request.get('_route') == 'contact' ? 'active' : '' }}" href="{{ path('app_contact') }}">
+					<i class="fas fa-envelope d-inline d-md-none"></i>
+					<span class="d-none d-md-inline">Contact</span>
+				</a>
+				{% if not app.user %}
+					<a class="nav-link text-white me-4" href="{{ path('app_login') }}">
+						<i class="fas fa-sign-in-alt d-inline d-md-none"></i>
+						<span class="d-none d-md-inline">Connexion</span>
+					</a>
+				{% endif %}
+			</div>
 
-            <!-- Menu de droite (icônes user, wishlist, panier) -->
-            <div class="speed-menu navbar-bottom-speed-menu">
-                {% if app.user %}
-                    <a href="{{ path('app_account') }}" class="nav-link navtop-link">
-                        <i data-feather="user"></i>
-                        {{ app.user.firstname }}
-                    </a>
-                    <a href="{{ path('app_account_wishlist') }}" class="heart-icons navbar-bottom-heart">
-                        <i data-feather="heart"></i>
-                        {% if app.user.wishlists|length > 0 %}
-                            <span class="wishlist-count">{{ app.user.wishlists|length }}</span>
-                        {% endif %}
-                    </a>
-                {% else %}
-                    <a href="{{ path('app_login') }}" class="navbar-bottom-login-link">
-                        <i data-feather="user"></i>
-                    </a>
-                {% endif %}
-                <a href="{{ path('app_cart') }}" class="nav-link navtop-link">
-                    <i data-feather="shopping-cart"></i>
-                    <span class="badge text-bg-light">{{ fullCartQuantity }}</span>
-                </a>
-            </div>
-        </div>
-    </div>
+			<!-- Menu de droite (icônes user, wishlist, panier) -->
+			<div class="d-flex">
+				{% if app.user %}
+					<a href="{{ path('app_account') }}" class="nav-link text-white me-3">
+						<i class="fas fa-user d-inline d-md-none"></i>
+						<span class="d-none d-md-inline">{{ app.user.firstname }}</span>
+					</a>
+					<a href="{{ path('app_account_wishlist') }}" class="nav-link text-white me-3 position-relative">
+						<i class="fas fa-heart d-inline d-md-none"></i>
+						<span class="d-none d-md-inline">Favoris</span>
+						{% if app.user.wishlists|length > 0 %}
+							<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+								{{ app.user.wishlists|length }}
+							</span>
+						{% endif %}
+					</a>
+					{% else %}
+
+				{% endif %}
+				<a href="{{ path('app_cart') }}" class="nav-link text-white position-relative me-3">
+					<i class="fas fa-shopping-cart"></i>
+					{% if fullCartQuantity > 0 %}
+						<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+							{{ fullCartQuantity }}
+						</span>
+					{% endif %}
+				</a>
+			</div>
+		</div>
+	</div>
 </nav>
-
 <!-- Deuxième Navbar (Catégories) -->
-<nav class="navbar navbar-expand-md navbar-dark fixed-top navbar-bottom" style="top: 56px;">
-    <div class="container-fluid">
-        <a class="navbar-brand navbar-bottom-brand" href="{{ path('app_home') }}">
-            <img src="{{ asset('SmArtis.gif') }}" alt="Logo SMARTIS" class="logo-animation" >
-        </a>
-        <button class="navbar-toggler navbar-bottom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarBottomCollapse" 
-                aria-controls="navbarBottomCollapse" aria-expanded="false" aria-label="Basculer la navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse navbar-bottom-collapse" id="navbarBottomCollapse">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0 navbar-bottom-nav">
-                {% for category in categories %}
-                    <li class="nav-item dropdown nav-bottom-item">
-                        <a class="nav-link dropdown-toggle nav-bottom-link {{ app.request.get('_route') == 'app_category' and 
-                            app.request.get('_route_params')['slug'] == category.slug ? 'active' : '' }}"
-                           href="#" 
-                           id="navbarDropdown{{ category.id }}" 
-                           role="button" 
-                           data-bs-toggle="dropdown" 
-                           aria-expanded="false">
-                            {{ category.name }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-bottom-menu" aria-labelledby="navbarDropdown{{ category.id }}">
-                            {# Produits sans sous-catégorie #}
-                            {% for product in category.products %}
-                                {% if product.sousCategory is null %}
-                                    <li class="nav-bottom-item">
-                                        <a class="dropdown-item dropdown-bottom-item" href="{{ path('app_product', {
-                                            category_slug: product.category.slug,
-                                            souscategory_slug: 'aucune', 
-                                            slug: product.slug
-                                        }) }}">
-                                            {{ product.name }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            {% endfor %}
-                            {# Sous-catégories #}
-                            {% for sousCategory in category.sousCategories %}
-                                <li class="dropdown-bottom-submenu dropdown nav-bottom-item">
-                                    <a class="dropdown-item dropdown-bottom-item dropdown-toggle nav-bottom-link" href="#" aria-expanded="false">
-                                        {{ sousCategory.name }}
-                                    </a>
-                                    {% if sousCategory.products|length > 0 %}
-                                        <ul class="dropdown-menu dropdown-bottom-menu">
-                                            {% for product in sousCategory.products %}
-                                                {% if product.category and product.sousCategory %}
-                                                    <li class="nav-bottom-item">
-                                                        <a class="dropdown-item dropdown-bottom-item" href="{{ path('app_product', {
-                                                            category_slug: product.category.slug,
-                                                            souscategory_slug: product.sousCategory.slug,
-                                                            slug: product.slug
-                                                        }) }}">
-                                                            {{ product.name }}
-                                                        </a>
-                                                    </li>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                </li>
-                            {% endfor %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li class="nav-bottom-item">
-                                <a class="dropdown-item dropdown-bottom-item text-center" href="{{ path('app_category', {slug: category.slug}) }}">
-                                    Voir tous les produits
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
+<nav class="navbar navbar-expand-md navbar-dark fixed-top navbar-bottom bg-dark" style="top: 56px;">
+	<div class="container-fluid">
+		<a class="navbar-brand navbar-bottom-brand" href="{{ path('app_home') }}">
+			<img src="{{ asset('SmArtis.gif') }}" alt="Logo SMARTIS" class="logo-animation">
+		</a>
+
+		<!-- Bouton hamburger pour mobile -->
+		<button class="navbar-toggler" type="button" onclick="toggleSidebar()">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<!-- Version desktop classique -->
+		<div class="collapse navbar-collapse navbar-bottom-collapse d-none d-md-block" id="navbarBottomCollapse">
+			<ul class="navbar-nav me-auto mb-2 mb-md-0 navbar-bottom-nav">
+				{% for category in categories %}
+					<li class="nav-item dropdown nav-bottom-item">
+						<a class="nav-link dropdown-toggle nav-bottom-link {{ app.request.get('_route') == 'app_category' and app.request.get('_route_params')['slug'] == category.slug ? 'active' : '' }}" href="#" id="navbarDropdown{{ category.id }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							{{ category.name }}
+						</a>
+						<ul
+							class="dropdown-menu dropdown-bottom-menu" aria-labelledby="navbarDropdown{{ category.id }}">
+							{# Produits sans sous-catégorie #}
+							{% for product in category.products %}
+								{% if product.sousCategory is null %}
+									<li class="nav-bottom-item">
+										<a class="dropdown-item dropdown-bottom-item" href="{{ path('app_product', { category_slug: category.slug, souscategory_slug: 'aucune', slug: product.slug }) }}">
+											{{ product.name }}
+										</a>
+									</li>
+								{% endif %}
+							{% endfor %}
+
+							{# Sous-catégories #}
+							{% for sousCategory in category.sousCategories %}
+								<li class="dropdown dropdown-bottom-submenu nav-bottom-item">
+									<a class="dropdown-item dropdown-bottom-item dropdown-toggle nav-bottom-link" href="#" data-bs-toggle="collapse" data-bs-target="#subcat{{ sousCategory.id }}" aria-expanded="false">
+										{{ sousCategory.name }}
+									</a>
+									{% if sousCategory.products|length > 0 %}
+										<ul class="collapse dropdown-menu dropdown-bottom-menu ps-3" id="subcat{{ sousCategory.id }}">
+											{% for product in sousCategory.products %}
+												<li class="nav-bottom-item">
+													<a class="dropdown-item dropdown-bottom-item" href="{{ path('app_product', { category_slug: category.slug, souscategory_slug: sousCategory.slug, slug: product.slug }) }}">
+														{{ product.name }}
+													</a>
+												</li>
+											{% endfor %}
+										</ul>
+									{% endif %}
+								</li>
+							{% endfor %}
+
+							<li><hr class="dropdown-divider"></li>
+							<li class="nav-bottom-item">
+								<a class="dropdown-item dropdown-bottom-item text-center" href="{{ path('app_category', { slug: category.slug }) }}">
+									Voir tous les produits
+								</a>
+							</li>
+						</ul>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
 </nav>
 
+<!-- Menu latéral mobile -->
+<div id="mobileCategorySidebar" class="mobile-sidebar d-md-none">
+	<button class="close-btn" onclick="toggleSidebar()">×</button>
+	{% for category in categories %}
+		<div class="category-section mb-3">
+			<div class="d-flex justify-content-between align-items-center">
+				<h5 class="text-white mb-1">{{ category.name }}</h5>
+			</div>
+			<ul
+				class="list-unstyled ps-2">
+				{# Produits sans sous-catégorie #}
+				{% for product in category.products %}
+					{% if product.sousCategory is null %}
+						<li>
+							<a class="mobile-menu-link" href="{{ path('app_product', { category_slug: category.slug, souscategory_slug: 'aucune', slug: product.slug }) }}">{{ product.name }}</a>
+						</li>
+					{% endif %}
+				{% endfor %}
+
+				{# Sous-catégories #}
+				{% for sousCategory in category.sousCategories %}
+					<li>
+						<button class="toggle-subcat-btn w-100 d-flex justify-content-between align-items-center" data-target="subcat-{{ sousCategory.id }}">
+							<span class="fw-bold">{{ sousCategory.name }}</span>
+							<span class="arrow-icon">▼</span>
+						</button>
+						<ul class="list-unstyled ps-3 d-none" id="subcat-{{ sousCategory.id }}">
+							{% for product in sousCategory.products %}
+								<li>
+									<a class="mobile-menu-link" href="{{ path('app_product', { category_slug: category.slug, souscategory_slug: sousCategory.slug, slug: product.slug }) }}">{{ product.name }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</li>
+				{% endfor %}
+			</ul>
+			<hr class="text-secondary">
+		</div>
+	{% endfor %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var dropdownSubmenus = document.querySelectorAll('.dropdown-bottom-submenu .dropdown-toggle');
+function toggleSidebar() {
+const sidebar = document.getElementById('mobileCategorySidebar');
+sidebar.classList.toggle('active');
+}
 
-    dropdownSubmenus.forEach(function (toggle) {
-        toggle.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
+// Gestion des sous-catégories dans le menu mobile
+document.addEventListener('DOMContentLoaded', function () {
+const toggleButtons = document.querySelectorAll('.toggle-subcat-btn');
 
-            document.querySelectorAll('.dropdown-bottom-submenu .dropdown-menu.show').forEach(function (openMenu) {
-                if (openMenu !== toggle.nextElementSibling) {
-                    openMenu.classList.remove('show');
-                }
-            });
-
-            var submenu = toggle.nextElementSibling;
-            submenu.classList.toggle('show');
-        });
-    });
-
-    document.addEventListener('click', function (e) {
-        if (!e.target.closest('.dropdown-bottom-submenu')) {
-            document.querySelectorAll('.dropdown-bottom-submenu .dropdown-menu.show').forEach(function (menu) {
-                menu.classList.remove('show');
-            });
-        }
-    });
+toggleButtons.forEach(function (btn) {
+btn.addEventListener('click', function () {
+const targetId = btn.getAttribute('data-target');
+const submenu = document.getElementById(targetId);
+if (submenu) {
+submenu.classList.toggle('d-none');
+btn.classList.toggle('open');
+}
 });
-</script>
+});
+});
+
+// Gestion des sous-menus dans la version desktop (navbar)
+document.addEventListener('DOMContentLoaded', function () {
+const dropdownSubmenus = document.querySelectorAll('.dropdown-bottom-submenu .dropdown-toggle');
+
+dropdownSubmenus.forEach(function (toggle) {
+toggle.addEventListener('click', function (e) {
+e.preventDefault();
+e.stopPropagation();
+
+document.querySelectorAll('.dropdown-bottom-submenu .dropdown-menu.show').forEach(function (openMenu) {
+if (openMenu !== toggle.nextElementSibling) {
+openMenu.classList.remove('show');
+}
+});
+
+const submenu = toggle.nextElementSibling;
+submenu.classList.toggle('show');
+});
+});
+
+document.addEventListener('click', function (e) {
+if (! e.target.closest('.dropdown-bottom-submenu')) {
+document.querySelectorAll('.dropdown-bottom-submenu .dropdown-menu.show').forEach(function (menu) {
+menu.classList.remove('show');
+});
+}
+});
+});</script>

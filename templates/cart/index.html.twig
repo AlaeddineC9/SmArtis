@@ -1,98 +1,112 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="container my-5 responsive-margin">
-	<h1 class="mb-5" style="margin-left:54px; margin-top:86px;">Mon panier</h1>
+<div class="container my-5">
+    <h1 class="mb-4 text-center">Mon panier</h1>
 
-	<table class="table table-hover">
-		<thead class="thead-dark">
-			<tr>
-				<th scope="col">Produit</th>
-				<th scope="col">Nom</th>
-				<th scope="col">Prix unitaire</th>
-				<th scope="col">Quantité</th>
-				<th scope="col">Total</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for product in cart %}
-				<tr>
-					<td class="text-center">
-						<div class="p-1">
-							<img 
-								src="{{ asset('uploads/products/' ~ product.object.illustration) }}" 
-								alt="{{ product.object.name }}" 
-								class="img-fluid" 
-								style="width: 50px; height: 50px;"
-							>
-						</div>
-					</td>
-					<td class="text-center">
-						<strong>{{ product.object.name }}</strong>
-					</td>
-					<td class="text-center">
-						{# Prix TTC (avec promotion si applicable) #}
-						{{ product.object.getPriceWithPromotion() | price }}
-					</td>
-					<td class="text-center">
-						<a 
-							href="{{ path('app_cart_decrease', { id : product.object.id } ) }}" 
-							class="change-qty" 
-							style="color: red;"
-						>
-							<strong>-</strong>
-						</a>
-						<span class="badge text-bg-secondary">
-							x {{ product.qty }}
-						</span>
-						<a 
-							href="{{ path('app_cart_add', { id : product.object.id } ) }}" 
-							class="change-qty" 
-							style="color: green;"
-						>
-							<strong>+</strong>
-						</a>
-					</td>
-					<td class="text-center">
-						{# Total TTC (qty * prix TTC avec promo) #}
-						<strong>{{ (product.qty * product.object.getPriceWithPromotion()) | price }}</strong>
-					</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+    {% if cart is not empty %}
+    <div class="row">
+        <!-- Table pour écrans moyens et larges -->
+        <div class="col-lg-8 mb-4">
+            <div class="d-none d-md-block">
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle shadow-sm">
+                        <thead class="table-dark">
+                            <tr class="text-center">
+                                <th>Produit</th>
+                                <th>Nom</th>
+                                <th>Prix unitaire</th>
+                                <th>Quantité</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in cart %}
+                            <tr class="text-center">
+                                <td>
+                                    <img src="{{ asset('uploads/products/' ~ product.object.illustration) }}"
+                                         alt="{{ product.object.name }}"
+                                         class="img-thumbnail rounded"
+                                         style="width: 60px; height: 60px; object-fit: cover;">
+                                </td>
+                                <td><strong>{{ product.object.name }}</strong></td>
+                                <td>{{ product.object.getPriceWithPromotion() | price }}</td>
+                                <td>
+                                    <a href="{{ path('app_cart_decrease', { id : product.object.id }) }}" class="btn btn-sm btn-outline-danger">-</a>
+                                    <span class="mx-2">x {{ product.qty }}</span>
+                                    <a href="{{ path('app_cart_add', { id : product.object.id }) }}" class="btn btn-sm btn-outline-success">+</a>
+                                </td>
+                                <td><strong>{{ (product.qty * product.object.getPriceWithPromotion()) | price }}</strong></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-	<a 
-		href="{{ path('app_cart_remove') }}" 
-		class="small d-block mt-3"
-		style="font-weight: bold; color: red; font-style: italic;"
-	>
-		<i class="fas fa-trash-alt"></i> Vider le panier
-	</a>
+            <!-- Affichage carte pour mobile -->
+            <div class="d-block d-md-none">
+                {% for product in cart %}
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body d-flex">
+                        <img src="{{ asset('uploads/products/' ~ product.object.illustration) }}"
+                             alt="{{ product.object.name }}"
+                             class="img-thumbnail me-3"
+                             style="width: 80px; height: 80px; object-fit: cover;">
+                        <div>
+                            <h5 class="card-title mb-1">{{ product.object.name }}</h5>
+                            <p class="mb-1"><strong>Prix :</strong> {{ product.object.getPriceWithPromotion() | price }}</p>
+                            <p class="mb-1 d-flex align-items-center gap-2">
+                                <strong>Quantité :</strong>
+                                <a href="{{ path('app_cart_decrease', { id : product.object.id }) }}" class="btn btn-sm btn-outline-danger">-</a>
+                                <span>x {{ product.qty }}</span>
+                                <a href="{{ path('app_cart_add', { id : product.object.id }) }}" class="btn btn-sm btn-outline-success">+</a>
+                            </p>
+                            <p class="mb-0"><strong>Total :</strong> {{ (product.qty * product.object.getPriceWithPromotion()) | price }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
 
-	<div class="col-md-4">
-		<div class="bg-light p-3">
-			<div class="d-flex justify-content-between">
-				<span class="fw-bold">Total produit</span>
-				<span>{{ fullCartQuantity }}</span>
-			</div>
-			<div class="d-flex justify-content-between mt-3">
-    <span class="fw-bold">Prix total T.T.C</span>
-    <span>
-        {% set totalPromo = 0 %}
-        {% for item in cart %}
-            {% set totalPromo = totalPromo + item.qty * item.object.getPriceWithPromotion() %}
-        {% endfor %}
-        {{ totalPromo | price }}
-    </span>
-</div>
-		</div>
-		<a 
-			href="{{ path('app_order') }}"  
-			class="btn btn-success w-100 mb-5"
-		>
-			Commander
-		</a>
-	</div>
+            <a href="{{ path('app_cart_remove') }}" class="btn btn-outline-danger mt-3 w-100">
+                <i class="fas fa-trash-alt"></i> Vider le panier
+            </a>
+        </div>
+
+        <!-- Récapitulatif -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    Récapitulatif
+                </div>
+                <div class="card-body">
+                    <p class="d-flex justify-content-between">
+                        <span>Total articles :</span>
+                        <strong>{{ fullCartQuantity }}</strong>
+                    </p>
+                    <hr>
+                    <p class="d-flex justify-content-between">
+                        <span>Total TTC :</span>
+                        <strong>
+                            {% set totalPromo = 0 %}
+                            {% for item in cart %}
+                                {% set totalPromo = totalPromo + item.qty * item.object.getPriceWithPromotion() %}
+                            {% endfor %}
+                            {{ totalPromo | price }}
+                        </strong>
+                    </p>
+                    <a href="{{ path('app_order') }}" class="btn btn-success w-100 mt-3">
+                        <i class="fas fa-credit-card"></i> Commander
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+        <div class="alert alert-warning text-center mt-5">
+            Votre panier est vide.
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

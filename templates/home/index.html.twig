@@ -12,7 +12,7 @@
     {{ form_end(form) }}
 
     <!-- SEARCH RESULTS -->
-    <div class="container mt-4" id="searchResults">
+    <div class="container mt-5" id="searchResults">
         {% if products is not empty %}
             <h2 class="text-center">Résultats de recherche :</h2>
             <ul>
@@ -106,8 +106,8 @@
             </p>
         </div>
         <div class="col-md-5 d-flex align-items-center justify-content-center">
-            <div class="bg-light d-flex justify-content-center align-items-center" 
-                 style="width: 300px; height: 300px; border: 2px solid grey; border-radius: 10%;">
+            <div class="improduct bg-light d-flex justify-content-center align-items-center" 
+                >
                 <img src="/uploads/products/{{ product.illustration }}" class="img-fluid" 
                      style="width: 90%; height: 90%; object-fit: cover;" />
             </div>

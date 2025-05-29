@@ -1,20 +1,22 @@
-<ul class="nav flex-column bg-light-blue text-black mt-4">
+<ul class="nav flex-column account-menu mt-4">
   <li class="nav-item">
-    <a class="nav-link text-black animated-title" href="{{ path('app_account') }}">Mes commandes</a>
+    <a class="nav-link animated-title {{ app.request.get('_route') == 'app_account' ? 'active' : '' }}" href="{{ path('app_account') }}">Mes commandes</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link text-black animated-title" href="{{ path('app_account_addresses') }}">Mes adresses</a>    
+    <a class="nav-link animated-title {{ app.request.get('_route') == 'app_account_addresses' ? 'active' : '' }}" href="{{ path('app_account_addresses') }}">Mes adresses</a>    
   </li>
   <li class="nav-item">
-    <a class="nav-link text-black animated-title" href="{{ path('app_account_wishlist') }}">Ma liste de souhait</a>    
+    <a class="nav-link animated-title {{ app.request.get('_route') == 'app_account_wishlist' ? 'active' : '' }}" href="{{ path('app_account_wishlist') }}">Ma liste de souhait</a>    
   </li>
   <li class="nav-item">
-    <a class="nav-link text-black animated-title" href="{{ path('app_account_modify_pwd') }}">Modifier mon mot de passe</a>
+    <a class="nav-link animated-title {{ app.request.get('_route') == 'app_account_modify_pwd' ? 'active' : '' }}" href="{{ path('app_account_modify_pwd') }}">Modifier mon mot de passe</a>
   </li>
   {% if is_granted('ROLE_ADMIN') %}
-  <a href="{{ path('admin') }}" class="nav-link text-black animated-title">Administration</a>
+  <li class="nav-item">
+    <a class="nav-link animated-title {{ app.request.get('_route') starts with 'admin' ? 'active' : '' }}" href="{{ path('admin') }}">Administration</a>
+  </li>
   {% endif %}
   <li class="nav-item">
-    <a class="nav-link text-black animated-title" href="{{ path('app_logout') }}">Me déconnecter</a>
+    <a class="nav-link animated-title" href="{{ path('app_logout') }}">Me déconnecter</a>
   </li>
 </ul>

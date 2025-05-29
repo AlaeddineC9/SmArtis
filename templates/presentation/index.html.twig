@@ -1,114 +1,154 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>À propos de SmArtis</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  {# Intégration de AOS pour les animations #}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.css" integrity="sha512-pgybU8z6gZN4x4hxLIemYkZ6ifH3/ZqQ83MDb7eBGrmtqVJBn9r+NLaZl+05wIRgz0yifUp6DhaZBlC2p8yWsw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <style>
-    /* Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+<style>
+    /* Section titre */
+    .hero-title {
+        background: rgba(0, 0, 0, 0.4);
+        padding: 16px;
+        text-align: center;
+        margin-top: 160px;
     }
-    body, html {
-      font-family: 'Helvetica', sans-serif;
-      color: #333;
-      line-height: 1.6;
-    }
-    /* Section Hero */
-    .hero {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-    }
-    .hero video {
-      width: 100%;
-      height: 60%;
-      object-fit: cover;
-      display: block;
-    }
-    .hero-overlay {
-      position: relative;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 58%;
-      background: rgba(0,0,0,0.2); 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      text-align: center;
-      padding-bottom: 2px;
-    }
-    .hero-overlay h1 {
-      font-size: 4em;
-      text-weight: bold;
-      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
-       background: linear-gradient(90deg, #F2DA5E,#D9961A, #F2D022);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    }
-    /* Section About */
-    .about-section {
-      padding: 60px 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .about-section h2 {
-      text-align: center;
-      margin-bottom: 40px;
-      font-size: 3em;
-      color: #222;
-    }
-    .about-section p {
-      margin-bottom: 20px;
-      font-size: 1.8em;
-      color: #555;
-    }
-  </style>
-</head>
-<body>
 
-  {# Section Hero avec vidéo publicitaire #}
-  <div class="hero-overlay" data-aos="fade-in" data-aos-duration="1500">
-      <h1>Découvrez l’univers unique de SmArtis !</h1>
-    </div>
-    <div class='row'>
-      <div class='col-md-12'>
-       
-      </div>
-  <section class="hero">
-  
-    <video autoplay muted loop playsinline>
-      <source src="{{ asset('uploads/videoSA.mp4') }}" type="video/mp4">
-      Votre navigateur ne supporte pas les vidéos.
-    </video>
-    
-  </section>
+    .hero-title h1 {
+        font-size: 4em;
+        font-weight: bold;
+        margin: 0 auto;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        background: linear-gradient(90deg, #F2DA5E, #D9961A, #F2D022);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
 
-  {# Section "À propos" #}
-  <section class="about-section" data-aos="fade-up" data-aos-duration="1500">
-    <h2>À propos de SmArtis</h2>
-    <p>SmArtis, c’est bien plus qu’une marque :<br> C’est une philosophie où l’art rencontre l’intelligence créative pour transformer et sublimer le quotidien.<br> En récupérant des éléments issus de la nature ou provenant d’associations, SmArtis redonne vie à des objets oubliés en leur offrant une nouvelle identité, souvent bien éloignée de leur usage initial.<br> Chaque création est le fruit d’un travail artisanal, guidé par l’écoute du cœur et des émotions, qui se traduit par des pièces uniques et porteuses de sens.<br></p>
-    <p>En osant imaginer autrement, SmArtis incarne l’engagement et la responsabilité sociale : aider les autres, créer avec passion, offrir et utiliser des objets qui véhiculent un message positif.<br> C’est cette alliance audacieuse entre recyclage, art et innovation qui fait de SmArtis une marque résolument tournée vers un bonheur partagé et une vision durable de la création.<br></p>
-    <p>Notre site vous invite à explorer la richesse de nos créations, tant par la diversité des matières utilisées que par l’originalité de nos méthodes d’assemblage. Pensés pour être fonctionnels ou simplement pour sublimer votre intérieur, nos objets faits main vous accompagnent lors des moments marquants de l’année et de votre vie : mariages, baptêmes, communions, anniversaires et bien plus encore.</p>
-    <p>Et si, malgré cette diversité, vous ne trouvez pas votre bonheur ? <br>Rien de plus simple !<br> Partagez-nous vos rêves, envies et projets, et nous nous chargerons de leur donner vie avec le plus grand soin et une attention particulière aux détails.</p>
-    
-  </section>
+    /* Bloc vidéo + intro côte à côte */
+    .about-top {
+        display: flex;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 60px auto 0;
+        gap: 40px;
+        padding: 0 24px;
+    }
+
+    .about-video {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .about-video video {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        display: block;
+    }
+
+    .about-intro {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .about-intro h2 {
+        font-size: 2.8em;
+        margin-bottom: 20px;
+        color: #222;
+    }
+
+    .about-intro p {
+        font-size: 1.4em;
+        color: #555;
+        line-height: 1.8;
+        text-align: justify;
+    }
+
+    /* Reste du texte */
+    .about-rest {
+        max-width: 1000px;
+        margin: 40px auto 80px;
+        padding: 0 24px;
+    }
+
+    .about-rest p {
+        margin-bottom: 20px;
+        font-size: 1.5em;
+        color: #555;
+        line-height: 1.8;
+        text-align: justify;
+    }
+
+    /* Responsive mobile */
+    @media (max-width: 768px) {
+        .hero-title h1 {
+            font-size: 24px;
+        }
+        .hero-title {
+            padding: 16px;
+            margin-top: 60px;
+        }
+
+        .about-top {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .about-video,
+        .about-intro {
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        .about-intro h2 {
+            font-size: 2em;
+            margin-top: 20px;
+        }
+
+        .about-intro p,
+        .about-rest p {
+            font-size: 1.2em;
+            margin-bottom: 16px;
+        }
+
+        .about-rest {
+            margin-top: 20px;
+        }
+    }
+</style>
+
+<!-- Titre principal -->
+<div class="hero-title">
+    <h1>Découvrez l’univers unique de SmArtis !</h1>
 </div>
-  {# Initialisation de AOS #}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.js" integrity="sha512-HoZgRBg26JhQnYf1w1kaHqwF8lCSfjpsYSfDXgTN04ZfT+6M+2YHDaZk6Ym+6Bmx0HdRFX1LjI/Dgl7+qc0smw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script>
-    AOS.init();
-  </script>
-  {# Vous pouvez ajouter ici d'autres animations JS si besoin #}
-</body>
-</html>
+
+<!-- Bloc vidéo + intro -->
+<div class="about-top">
+    <div class="about-video">
+        <video autoplay muted loop playsinline>
+            <source src="{{ asset('uploads/videoSA.mp4') }}" type="video/mp4">
+            Votre navigateur ne supporte pas les vidéos.
+        </video>
+    </div>
+    <div class="about-intro">
+        <h2>À propos de SmArtis</h2>
+        <p>
+            SmArtis, c’est bien plus qu’une marque :<br> Une philosophie où l’art rencontre l’intelligence créative pour sublimer le quotidien.<br>
+            En récupérant des éléments issus de la nature ou d’associations, SmArtis redonne vie à des objets oubliés en leur offrant une nouvelle identité.
+        </p>
+    </div>
+</div>
+
+<!-- Texte complémentaire -->
+<div class="about-rest">
+    <p>
+        Chaque création est artisanale, guidée par les émotions, et devient une pièce unique porteuse de sens.
+        SmArtis incarne un engagement social : aider, créer avec passion, et offrir des objets qui véhiculent un message positif.
+    </p>
+    <p>
+        Notre site vous invite à explorer nos créations, pensées pour être fonctionnelles ou décoratives, accompagnant vos moments marquants :
+        mariages, baptêmes, anniversaires, etc.
+    </p>
+    <p>
+        Et si vous ne trouvez pas votre bonheur ? Partagez-nous vos rêves et projets :
+        nous les réaliserons avec soin et créativité.
+    </p>
+</div>
 {% endblock %}

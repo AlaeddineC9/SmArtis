@@ -3,13 +3,39 @@
 {% block title %}Contact{% endblock %}
 
 {% block body %}
-<h1 class="text-center" style="margin-top:86px">Contactez-nous</h1>
+<h1 class="text-center mt-5">Contactez-nous</h1>
 
-<div class="container mt-4">
+<style>
+    /* === Responsivité mobile pour la page Contact === */
+    @media (max-width: 768px) {
+        .contact-page .container,
+        .contact-page .row,
+        .contact-page .col-md-6 {
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .contact-page h2,
+        .contact-page p {
+            text-align: center;
+        }
+
+        .contact-page iframe {
+            width: 100%;
+            height: auto;
+        }
+
+        h1 {
+            margin-top: 86px;
+        }
+    }
+</style>
+
+<div class="container mt-4 contact-page">
     <div class="row justify-content-center">
 
-        <!-- Informations de contact -->
-        <div class="col-md-6">
+        <!-- Colonne gauche : Infos de contact + carte -->
+        <div class="col-md-6 mb-5">
             <div class="contact-info mb-4">
                 {% if app.user %}
                     <h2>Bonjour, {{ app.user.firstname }} {{ app.user.lastname }}</h2>
@@ -18,7 +44,7 @@
                 {% endif %}
 
                 <p>
-                    Dites-nous qui vous êtes et comment nous pouvons vous aider.
+                    Dites-nous qui vous êtes et comment nous pouvons vous aider.<br>
                     Nous vous répondrons dans les plus brefs délais.
                 </p>
 
@@ -28,16 +54,13 @@
                             {{ contact is not null and contact.companyName ? contact.companyName : 'Lapcom' }}
                         </strong>
                     </p>
-                    <p>
-                        <i class="fas fa-phone"></i>
+                    <p><i class="fas fa-phone"></i>
                         {{ contact is not null and contact.phone ? contact.phone : '(+33) 6 99 85 80 05' }}
                     </p>
-                    <p>
-                        <i class="fas fa-envelope"></i>
+                    <p><i class="fas fa-envelope"></i>
                         {{ contact is not null and contact.email ? contact.email : 'exemple@contact.com' }}
                     </p>
-                    <p>
-                        <i class="fas fa-map-marker-alt"></i>
+                    <p><i class="fas fa-map-marker-alt"></i>
                         {{ contact is not null and contact.address ? contact.address : '20 Rue Marcelin Berthelot, 95210 Saint-Gratien' }}
                     </p>
                 </div>
@@ -60,8 +83,8 @@
             </iframe>
         </div>
 
-        <!-- Formulaire de contact -->
-        <div class="col-md-6 mt-5">
+        <!-- Colonne droite : Formulaire -->
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header text-center bg-dark text-white">
                     Formulaire de Contact

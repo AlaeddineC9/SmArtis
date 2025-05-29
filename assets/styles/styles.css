@@ -52,10 +52,12 @@ html[data-theme=dark] {
     --docsearch-muted-color: #7f8497;
     background-image: url("../Design.png");
 }
-.carousel{
+
+.carousel {
     margin-top: 0px;
     z-index: -2;
 }
+
 .background-image {
     background-image: url("../ala.jpeg");
     background-repeat: no-repeat;
@@ -64,10 +66,26 @@ html[data-theme=dark] {
     background-attachment: fixed;
 }
 
+.navbar-top .badge {
+    font-size: 0.75rem;
+    padding: 4px 6px;
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px #000;
+}
+
+.navbar-top .nav-link i,
+.navbar-top .nav-link span {
+    background: linear-gradient(90deg, #F2DA5E, #D9961A, #F2D022);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
 .navbar-bottom {
-    position: relative; /* Permet de positionner le pseudo-élément */
+    position: relative;
+    /* Permet de positionner le pseudo-élément */
     z-index: 1000;
-    
+
     width: 100%;
     height: 68px;
     border-radius: 12px;
@@ -77,23 +95,26 @@ html[data-theme=dark] {
     font-size: 1.5rem;
     padding-left: 56px;
     margin-top: 8px;
-    
-    
+
+
 }
-.navbar-top{
-    position: absolute; /* Permet de positionner le pseudo-élément */
+
+.navbar-top {
+    position: absolute;
+    /* Permet de positionner le pseudo-élément */
     z-index: 0;
     background-color: #000000;
     color: #ffffff;
     width: 100%;
     height: 68px;
-    
+
     font-family: "Lilita One", sans-serif;
     font-weight: 400;
     font-style: normal;
     font-size: 1.5rem;
     padding-left: 25%;
 }
+
 .navbar-top.navbar-expand-md .navbar-nav .nav-link {
     display: flex;
     justify-content: flex-end;
@@ -101,16 +122,17 @@ html[data-theme=dark] {
     padding-right: 36px;
 
     /* Appliquer un dégradé en fond */
-    background: linear-gradient(90deg, #F2DA5E,#D9961A, #F2D022);
+    background: linear-gradient(90deg, #F2DA5E, #D9961A, #F2D022);
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent; /* Le texte est transparent pour laisser apparaître le dégradé */
+    color: transparent;
+    /* Le texte est transparent pour laisser apparaître le dégradé */
 }
 
 .navbar-bottom::before {
     content: "";
     background-image: url("../ala1.jpg");
-    opacity: 0.6;
+    opacity: 0.8;
     background-size: cover;
     background-position: center;
     position: absolute;
@@ -121,25 +143,30 @@ html[data-theme=dark] {
     z-index: -1;
     border-radius: 0 0 16px 16px;
 }
-.speed-menu{
+
+.speed-menu {
     display: contents;
 }
+
 .container {
     margin-top: 86px;
     padding-left: 32px;
 }
+
 .footer {
-    position: relative; /* Permet de positionner le pseudo-élément */
+    position: relative;
+    /* Permet de positionner le pseudo-élément */
     z-index: 0;
-   
+
     height: 68px;
     border-radius: 12px;
     font-family: "Lilita One", sans-serif;
-   
+
     font-style: normal;
-    margin-top: 94px;
-   
+    /* margin-top: 94px; */
+
 }
+
 .footer::before {
     content: "";
     background-image: url("../ala1.jpg");
@@ -154,6 +181,7 @@ html[data-theme=dark] {
     z-index: -1;
     border-radius: 16px;
 }
+
 .info h2 {
     font-family: "Lilita One", sans-serif;
     font-weight: 400;
@@ -167,10 +195,12 @@ html[data-theme=dark] {
     width: 124px;
     height: 86px;
 }
+
 .navbar-expand-md .navbar-nav .nav-link {
     color: #262626;
     z-index: 1000;
 }
+
 .navbar-nav .dropdown-menu {
     width: 300px;
     z-index: 1000;
@@ -207,7 +237,7 @@ html[data-theme=dark] {
 }
 
 /* Ajouter une flèche aux sous-catégories */
-.dropdown-submenu > a::after {
+.dropdown-submenu>a::after {
     content: "»";
     float: right;
     margin-left: 5px;
@@ -218,12 +248,14 @@ html[data-theme=dark] {
     display: block;
     z-index: 1000;
 }
+
 .badge {
-    
+
     color: black;
     font-size: larger;
 }
-.descreption{
+
+.descreption {
     font-size: larger;
     color: black;
 }
@@ -232,34 +264,60 @@ html[data-theme=dark] {
     padding-left: 164px;
     padding-right: 48px;
 }
-.card{
+
+.card {
     box-shadow: 2px 2px 7px 1px rgb(115, 115, 115);
 }
+
 .card-title {
     text-shadow: 1px 2px 2px rgb(115, 115, 115);
     color: #262626;
 }
+
 .navbar-brand img {
     width: 124px;
     height: 86px;
 }
 
-.navbar-expand-md .navbar-nav{
+.navbar-expand-md .navbar-nav {
     flex-direction: row;
     font-size: x-large;
     gap: 24px;
 }
-.carousel-inner{overflow:hidden;position:relative;width:100%;height:906px;}
-.carousel-inner img{width:100%;height:900px;margin-top: -20px; justify-items: center;}
-.carousel-caption{
-    margin-bottom: 124px;
+
+.carousel-inner {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 600px;
+    /* Hauteur réduite */
 }
-.contact-section{
+
+.carousel-inner img {
+    width: 100%;
+    height: 600px;
+    /* Ajustement identique */
+    object-fit: fill;
+    margin-top: 0;
+}
+
+/* Centrer verticalement le contenu de la légende */
+.carousel-caption {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-bottom: 0;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.contact-section {
     background-color: #e4e4e4;
     margin-left: 164px;
     margin-right: 164px;
     border-radius: 16px;
+    margin-bottom: 20px;
 }
+
 .DocSearch-Button {
     align-items: center;
     background: var(--docsearch-searchbox-background);
@@ -278,22 +336,38 @@ html[data-theme=dark] {
 
 
 .logo-animation {
-    animation: zoomIn 1.5s ease-out forwards; /* Animation de 1.5s */
-    transform-origin: center; /* Centre de zoom */
+    animation: zoomIn 1.5s ease-out forwards;
+    /* Animation de 1.5s */
+    transform-origin: center;
+    /* Centre de zoom */
+}
+
+.improduct {
+    width: 300px;
+     height: 300px;
+      border: 2px solid grey; 
+      border-radius: 10%;
 }
 
 /* Définition de l'animation */
 @keyframes zoomIn {
     0% {
-        transform: scale(0.5); /* Taille initiale réduite */
-        opacity: 0; /* Logo invisible au départ */
+        transform: scale(0.5);
+        /* Taille initiale réduite */
+        opacity: 0;
+        /* Logo invisible au départ */
     }
+
     50% {
-        transform: scale(1.2); /* Légèrement plus grand que la taille normale */
-        opacity: 1; /* Logo devient visible */
+        transform: scale(1.2);
+        /* Légèrement plus grand que la taille normale */
+        opacity: 1;
+        /* Logo devient visible */
     }
+
     100% {
-        transform: scale(3) translateY(20px); /* Taille normale */
+        transform: scale(3) translateY(20px);
+        /* Taille normale */
         opacity: 1;
     }
 }
@@ -882,6 +956,10 @@ svg.DocSearch-Hit-Select-Icon {
     width: 20px
 }
 
+/* .navbar-top .navbar-nav {
+    gap: 3rem; /* Ajuste à ta convenance 
+} */
+
 @media (max-width:768px) {
     :root {
         --docsearch-spacing: 10px;
@@ -959,4 +1037,287 @@ svg.DocSearch-Hit-Select-Icon {
     to {
         opacity: 1
     }
+}
+
+@media (max-width: 768px) {
+    .navbar-bottom .navbar-brand img {
+        width: 60px !important;
+        height: auto !important;
+        padding-bottom: 45px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-section {
+        margin-left: 16px;
+        margin-right: 16px;
+        text-align: center;
+        padding: 20px;
+        margin-bottom: 10px;
+    }
+
+    .contact-section h2,
+    .contact-section p {
+        text-align: center;
+    }
+}
+
+/* Responsive carousel - texte version mobile */
+@media (max-width: 768px) {
+    .carousel-caption {
+        top: 55%;
+        transform: translateY(-55%);
+        padding: 0 16px;
+        text-align: center;
+    }
+
+    .carousel-caption h1 {
+        font-size: 1.2rem;
+        line-height: 1.2;
+    }
+
+    .carousel-caption p {
+        font-size: 0.80rem;
+        line-height: 1.4;
+    }
+
+    .carousel-caption .btn {
+        font-size: 0.70rem;
+        padding: 6px 14px;
+    }
+
+    .carousel-inner {
+        height: 260px;
+    }
+
+    .carousel-inner img {
+        height: 260px;
+        object-fit: cover;
+    }
+    .improduct {
+        width: 164px;
+        height: 164px;
+    }
+    .footer::before {
+        bottom: -46;
+        
+    }
+    
+}
+
+@media (max-width: 768px) {
+
+    h1,
+    .h1 {
+        font-size: 1.8rem;
+        line-height: 1.3;
+        text-align: center;
+        padding: 0 12px;
+    }
+
+    h2,
+    .h2 {
+        font-size: 1.5rem;
+        text-align: center;
+        padding: 0 12px;
+    }
+
+    h3,
+    .h3 {
+        font-size: 1.3rem;
+        text-align: center;
+        padding: 0 12px;
+    }
+
+    p {
+        font-size: 1rem;
+        line-height: 1.5;
+        padding: 0 16px;
+        text-align: center;
+    }
+
+    .btn {
+        font-size: 1rem;
+        padding: 8px 14px;
+    }
+
+    .container,
+    .row,
+    .col-md-6 {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+.account-title {
+    margin-left: 54px;
+    margin-top: 86px;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Cartes d'encapsulation avec ombrage */
+.account-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+}
+
+/* Boutons secondaires */
+.btn-outline-secondary,
+.btn-outline-primary {
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-secondary:hover,
+.btn-outline-primary:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
+
+.account-menu {
+    background-color: #f8f9fa;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.account-menu .nav-link {
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    color: #333;
+    font-weight: 500;
+    transition: background-color 0.3s, color 0.3s;
+    text-decoration: none;
+}
+
+.account-menu .nav-link:hover {
+    background-color: #D9961A;
+    color: #fff;
+}
+
+/* Si tu veux mettre un style "actif" manuellement */
+.account-menu .nav-link.active {
+    background-color: #F2DA5E;
+    color: #000;
+    font-weight: bold;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+    .navbar-bottom .dropdown-menu {
+        position: static !important;
+        width: 100%;
+        background-color: #343a40;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        margin-bottom: 1rem;
+        border: none;
+    }
+
+    .navbar-bottom .dropdown-item {
+        color: white !important;
+        padding-left: 1.5rem;
+    }
+
+    .navbar-bottom .dropdown-toggle::after {
+        float: right;
+        margin-top: 8px;
+    }
+
+    .dropdown-bottom-submenu .dropdown-menu {
+        margin-left: 1rem;
+    }
+
+    .navbar-bottom-collapse.collapse.show {
+        background-color: #343a40;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .navbar-bottom .navbar-brand img {
+        max-height: 64px;
+    }
+}
+
+/* Menu latéral mobile */
+.mobile-sidebar {
+  position: fixed;
+  top: 56px; /* Ajusté selon la hauteur de ta première navbar */
+  left: -300px;
+  width: 280px;
+  height: 100%;
+  background-color: #212529;
+  color: white;
+  overflow-y: auto;
+  transition: left 0.3s ease;
+  z-index: 1050;
+  padding: 1rem;
+}
+
+.mobile-sidebar.active {
+  left: 0;
+}
+
+.mobile-sidebar .close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  cursor: pointer;
+}
+
+.mobile-sidebar a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 6px 0;
+}
+
+.mobile-sidebar a:hover {
+  text-decoration: underline;
+}
+
+.toggle-subcat {
+	background: none;
+	border: none;
+	font-size: 1rem;
+	text-align: left;
+	width: 100%;
+}
+
+.mobile-menu-link {
+	color: #ddd;
+	display: block;
+	padding: 6px 0;
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.mobile-menu-link:hover {
+	color: #fff;
+}
+
+.toggle-subcat-btn {
+	background: none;
+	border: none;
+	color: #f2da5e;
+	font-size: 1rem;
+	padding: 6px 0;
+	text-align: left;
+	cursor: pointer;
+}
+
+.toggle-subcat-btn .arrow-icon {
+	transition: transform 0.3s ease;
+}
+
+.toggle-subcat-btn.open .arrow-icon {
+	transform: rotate(180deg);
 }
